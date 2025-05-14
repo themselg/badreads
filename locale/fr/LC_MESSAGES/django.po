@@ -1,0 +1,80 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-13 16:48-0600\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: main_app/templates/main_app/home.html:6
+#: main_app/templates/main_app/home.html:9
+msgid "Home Page"
+msgstr "Page d'accueil"
+
+#: main_app/templates/main_app/home.html:16
+msgid "Logout"
+msgstr "Déconnexion"
+
+#: main_app/templates/main_app/home.html:20
+#: main_app/templates/main_app/login.html:6
+#: main_app/templates/main_app/login.html:9
+#: main_app/templates/main_app/login.html:24
+msgid "Login"
+msgstr "Connexion"
+
+#: main_app/templates/main_app/home.html:22
+#: main_app/templates/main_app/signup.html:6
+#: main_app/templates/main_app/signup.html:9
+#: main_app/templates/main_app/signup.html:24
+msgid "Sign Up"
+msgstr "Inscription"
+
+#: main_app/templates/main_app/home.html:33
+msgid "Language"
+msgstr "Langue"
+
+#: main_app/templates/main_app/home.html:45
+msgid "Go"
+msgstr "Aller"
+
+#: main_app/templates/main_app/login.html:30
+#, python-format
+msgid "Don't have an account? <a href=\"%(signup_url)s\">Sign Up here</a>."
+msgstr "Vous n'avez pas de compte ? <a href=\"%(signup_url)s\">Inscrivez-vous ici</a>."
+
+#: main_app/templates/main_app/signup.html:30
+#, python-format
+msgid "Already have an account? <a href=\"%(login_url)s\">Log In here</a>."
+msgstr "Vous avez déjà un compte ? <a href=\"%(login_url)s\">Connectez-vous ici</a>."
+
+#: main_app/views.py:22
+msgid "Account created successfully! Please log in."
+msgstr "Compte créé avec succès ! Veuillez vous connecter."
+
+#: main_app/views.py:26
+msgid "Please correct the errors below."
+msgstr "Veuillez corriger les erreurs ci-dessous."
+
+#: main_app/views.py:46 main_app/views.py:49
+msgid "Invalid username or password."
+msgstr "Nom d'utilisateur ou mot de passe invalide."
+
+#: main_app/views.py:58
+msgid "You have been logged out successfully."
+msgstr "Vous avez été déconnecté avec succès."
+
+#: main_app/views.py:69
+msgid "Welcome to the site. Please log in or sign up."
+msgstr "Bienvenue sur le site. Veuillez vous connecter ou vous inscrire."
