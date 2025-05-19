@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-13 16:48-0600\n"
+"POT-Creation-Date: 2025-05-14 10:54-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,63 +18,67 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: main_app/templates/main_app/home.html:6
-#: main_app/templates/main_app/home.html:9
+#: main_app/templates/main_app/home.html:7
+#: main_app/templates/main_app/home.html:14
 msgid "Home Page"
 msgstr "ホームページ"
 
-#: main_app/templates/main_app/home.html:16
+#: main_app/templates/main_app/home.html:18
 msgid "Logout"
 msgstr "ログアウト"
 
-#: main_app/templates/main_app/home.html:20
+#: main_app/templates/main_app/home.html:21
 #: main_app/templates/main_app/login.html:6
-#: main_app/templates/main_app/login.html:9
-#: main_app/templates/main_app/login.html:24
+#: main_app/templates/main_app/login.html:14
+#: main_app/templates/main_app/login.html:34
 msgid "Login"
 msgstr "ログイン"
 
 #: main_app/templates/main_app/home.html:22
-#: main_app/templates/main_app/signup.html:6
-#: main_app/templates/main_app/signup.html:9
-#: main_app/templates/main_app/signup.html:24
+#: main_app/templates/main_app/signup.html:7
+#: main_app/templates/main_app/signup.html:15
+#: main_app/templates/main_app/signup.html:33
 msgid "Sign Up"
 msgstr "サインアップ"
 
-#: main_app/templates/main_app/home.html:33
+#: main_app/templates/main_app/home.html:31
 msgid "Language"
 msgstr "言語"
 
-#: main_app/templates/main_app/home.html:45
+#: main_app/templates/main_app/home.html:42
 msgid "Go"
 msgstr "移動"
 
-#: main_app/templates/main_app/login.html:30
+#: main_app/templates/main_app/login.html:40
 #, python-format
 msgid "Don't have an account? <a href=\"%(signup_url)s\">Sign Up here</a>."
-msgstr "アカウントをお持ちでないですか？<a href=\"%(signup_url)s\">こちらからサインアップ</a>。"
+msgstr ""
+"アカウントをお持ちでないですか？<a href=\"%(signup_url)s\">こちらからサイン"
+"アップ</a>。"
 
-#: main_app/templates/main_app/signup.html:30
+#: main_app/templates/main_app/signup.html:39
 #, python-format
 msgid "Already have an account? <a href=\"%(login_url)s\">Log In here</a>."
-msgstr "すでにアカウントをお持ちですか？<a href=\"%(login_url)s\">こちらからログイン</a>。"
+msgstr ""
+"すでにアカウントをお持ちですか？<a href=\"%(login_url)s\">こちらからログイン"
+"</a>。"
 
-#: main_app/views.py:22
+#: main_app/views.py:18
 msgid "Account created successfully! Please log in."
 msgstr "アカウントが正常に作成されました！ログインしてください。"
 
-#: main_app/views.py:26
+#: main_app/views.py:21
 msgid "Please correct the errors below."
 msgstr "以下のエラーを修正してください。"
 
-#: main_app/views.py:46 main_app/views.py:49
+#: main_app/views.py:39 main_app/views.py:41
 msgid "Invalid username or password."
 msgstr "ユーザー名またはパスワードが無効です。"
 
-#: main_app/views.py:58
+#: main_app/views.py:49
 msgid "You have been logged out successfully."
 msgstr "正常にログアウトされました。"
 
-#: main_app/views.py:69
+#: main_app/views.py:57
 msgid "Welcome to the site. Please log in or sign up."
 msgstr "サイトへようこそ。ログインまたはサインアップしてください。"

@@ -37,8 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "main_app"
+    "main_app",
+    "tailwind",
+    "theme",
+    # 'django_browser_reload',
 ]
+
+TAILWIND_APP_NAME = 'theme'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -49,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 ROOT_URLCONF = 'badreads_project.urls'
@@ -118,9 +124,7 @@ LANGUAGES = [
 ]
 
 LOCALE_PATHS = [
-    BASE_DIR / 'locale', # Asegúrate de que BASE_DIR esté correctamente definido (generalmente lo está)
-    # Si tienes traducciones específicas por app, también agrégalas:
-    # BASE_DIR / 'nombre_de_tu_app' / 'locale',
+    BASE_DIR / 'locale',
 ]
 
 TIME_ZONE = 'America/Mexico_City'
@@ -140,9 +144,9 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'main_app.User' # Reemplaza 'nombre_de_tu_app' por el nombre de tu app de Django
+AUTH_USER_MODEL = 'main_app.User'
 
 # Configuraciones para redirecciones de autenticación
-LOGIN_REDIRECT_URL = '/' # O la URL a la que quieres redirigir después del login exitoso
-LOGOUT_REDIRECT_URL = '/login/' # O la URL a la que quieres redirigir después del logout
-LOGIN_URL = '/login/' # O la URL de tu página de login
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login/'
+LOGIN_URL = '/login/'
