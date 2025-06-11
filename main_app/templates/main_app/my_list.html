@@ -1,0 +1,124 @@
+{% extends 'main_app/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "My Reading List" %}{% endblock %}
+
+{% block content %}
+    <h2 class="section-title mb-4">{% trans "My Reading List" %}</h2>
+
+    <ul class="nav nav-tabs nav-justified mb-4" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active rounded-material" id="wants-to-read-tab" data-bs-toggle="tab" data-bs-target="#wants-to-read" type="button" role="tab" aria-controls="wants-to-read" aria-selected="true">
+                {% trans "Wants to Read" %}
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link rounded-material" id="has-read-tab" data-bs-toggle="tab" data-bs-target="#has-read" type="button" role="tab" aria-controls="has-read" aria-selected="false">
+                {% trans "Already Read" %}
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+        {# Pestaña "Quiero Leer" #}
+        <div class="tab-pane fade show active" id="wants-to-read" role="tabpanel" aria-labelledby="wants-to-read-tab">
+            <div class="row">
+                {% if wants_to_read_list %}
+                    {% for item in wants_to_read_list %}
+                        <div class="col-md-4 col-lg-3 mb-4">
+                            <div class="card h-100 rounded-material elevation-1">
+                                    <img src="{% if item.book.cover %}{{ item.book.cover.url }}{% elif item.book.isbn %}https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-L.jpg{% else %}{% static 'images/default_book.png' %}{% endif %}" class="card-img-top" alt="{{ item.book.title }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ item.book.title }}</h5>
+                                    <p class="card-text text-muted mb-2">
+                                        {% if item.book.authors.all %}
+                                            {% for author in item.book.authors.all %}
+                                                {{ author.name }}{% if not forloop.last %}, {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            {% trans "Unknown Author" %}
+                                        {% endif %}
+                                    </p>
+                                    <small class="text-muted">{% trans "Added on" %}: {{ item.since|date:"M d, Y" }}</small>
+                                    <div class="mt-2">
+                                        <a href="{% url 'book_detail' item.book.pk %}" class="btn btn-sm btn-outline-primary rounded-pill">{% trans "Details" %}</a>
+                                        {# Botón para marcar como leído (y pedir reseña) #}
+                                        <a href="{% url 'add_review_for_book' item.book.pk %}?book_title={{ item.book.title|urlencode }}" class="btn btn-sm btn-primary rounded-pill ms-2">{% trans "Mark as Read" %}</a>
+                                        {#Botón para eliminar de la lista "Quiero Leer" #}
+                                        <form action="{% url 'remove_from_wants_to_read' item.pk %}" method="post" class="d-inline ms-2">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-danger rounded-pill" onclick="return confirm('{% trans "Are you sure you want to remove this book from your \\'Wants to Read\\' list?" %}')">
+                                                {% trans "Remove" %}
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12 text-center">
+                        <p class="lead">{% trans "Your 'Wants to Read' list is empty." %}</p>
+                        <p>{% trans "Start adding books to your list!" %}</p>
+                        <a href="{% url 'add_book_or_review' %}" class="btn btn-primary rounded-pill">{% trans "Add a Book" %}</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {# Pestaña "Ya He Leído" #}
+        <div class="tab-pane fade" id="has-read" role="tabpanel" aria-labelledby="has-read-tab">
+            <div class="row">
+                {% if has_read_list %}
+                    {% for review_obj in has_read_list %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card p-3 rounded-material elevation-1">
+                                <div class="d-flex align-items-center mb-2">
+                                    <img src="{% if review_obj.user.profile_picture %}{{ review_obj.user.profile_picture.url }}{% else %}{% static 'images/default_profile.png' %}{% endif %}" alt="Profile Image" class="profile-img me-2 rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
+                                    <h6 class="mb-0">
+                                        <a href="{% url 'user_profile' review_obj.user.pk %}" class="text-decoration-none text-body">{{ review_obj.user.display_name }}</a>
+                                    </h6>
+                                    <small class="text-muted ms-auto">{% trans "on" %} {{ review_obj.review_date|date:"M d, Y" }}</small>
+                                </div>
+                                <h5 class="card-title"><a href="{% url 'book_detail' review_obj.book.pk %}" class="text-decoration-none text-body">{{ review_obj.book.title }}</a></h5>
+                                <p class="card-text">{{ review_obj.review }}</p>
+                                {% if review_obj.rating %}
+                                    <p class="card-text">{% trans "Rating" %}: {{ review_obj.rating }}/5</p>
+                                {% endif %}
+                                <hr>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    {# Botón de Like #}
+                                    <form action="{% url 'like_review' review_obj.pk %}" method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill">
+                                            <span class="material-icons me-1" style="font-size: 18px;">thumb_up</span>
+                                            {{ review_obj.likes.count }} {% trans "Likes" %}
+                                        </button>
+                                    </form>
+                                    {# Enlace para ver detalles del libro #}
+                                    <a href="{% url 'book_detail' review_obj.book.pk %}" class="btn btn-sm btn-link see-more-link">{% trans "View Book" %}</a>
+                                    {# Botón de Eliminar Reseña (solo para el autor) #}
+                                    {% if user.is_authenticated and user == review_obj.user %}
+                                        <form action="{% url 'delete_review' review_obj.pk %}" method="post" class="d-inline ms-2">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-danger rounded-pill" onclick="return confirm('{% trans "Are you sure you want to delete this review?" %}')">
+                                                {% trans "Delete" %}
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12 text-center">
+                        <p class="lead">{% trans "You haven't reviewed any books yet." %}</p>
+                        <p>{% trans "Mark books as read and add your thoughts!" %}</p>
+                        <a href="{% url 'add_book_or_review' %}" class="btn btn-primary rounded-pill">{% trans "Add a Review" %}</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

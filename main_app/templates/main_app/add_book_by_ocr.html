@@ -1,0 +1,284 @@
+{% extends 'main_app/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Scan ISBN with Camera" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Estilos para el modal de la cámara (adaptados para la página completa) */
+    .ocr-page-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 100px); /* Ajusta según el tamaño de tu header/footer */
+        background-color: var(--tw-colors-background);
+        padding: 1rem;
+    }
+    .ocr-camera-area {
+        position: relative;
+        width: 100%;
+        max-width: 800px; /* Ancho máximo para la vista de la cámara */
+        background-color: #000;
+        border-radius: var(--tw-border-radius-material);
+        overflow: hidden;
+        margin-bottom: 1rem;
+        box-shadow: var(--tw-box-shadow-material-lg);
+    }
+    .ocr-camera-area video {
+        display: block;
+        width: 100%;
+        height: auto;
+        transform: scaleX(-1); /* Efecto espejo para cámara frontal */
+    }
+    .ocr-camera-area canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none; /* Permite que los clics pasen a los elementos subyacentes */
+    }
+    .ocr-scan-overlay {
+        position: absolute;
+        border: 2px dashed #00ff00; /* Borde verde punteado */
+        box-sizing: border-box;
+        opacity: 0.7;
+    }
+    .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        z-index: 10;
+        border-radius: inherit; /* Inherit border-radius from parent */
+    }
+    .ocr-controls {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        width: 100%;
+        max-width: 800px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="ocr-page-container">
+        <h2 class="section-title mb-4">{% trans "Scan ISBN with Camera" %}</h2>
+
+        {% if messages %}
+            <div class="mb-4 w-100 max-w-lg">
+            {% for message in messages %}
+                 {% if 'error' in message.tags %}<div class="alert alert-danger" role="alert">
+                 {% else %}<div class="alert alert-{{ message.tags }}" role="alert">{% endif %}
+                    {{ message }}
+                 </div>
+            {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="ocr-camera-area">
+            <video id="cameraFeed" autoplay playsinline></video>
+            <canvas id="scanOverlayCanvas"></canvas>
+            <div class="loading-overlay" id="ocrLoadingOverlay" style="display: none;">
+                <div class="spinner-border text-light" role="status">
+                    <span class="visually-hidden">{% trans "Loading..." %}</span>
+                </div>
+                <p class="mt-3">{% trans "Scanning ISBN..." %}</p>
+            </div>
+        </div>
+
+        <div class="ocr-controls">
+            <a href="{% url 'add_book' %}" class="btn btn-outline-secondary rounded-pill">{% trans "Cancel" %}</a>
+            <button type="button" class="btn btn-primary rounded-pill" id="takePhotoBtn">{% trans "Take Photo & Scan" %}</button>
+        </div>
+    </div>
+
+
+        <div class="ocr-page-container">
+        <form style="display:none;">{% csrf_token %}</form>
+        </div>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("OCR page DOM content loaded.");
+
+        const cameraFeed = document.getElementById('cameraFeed');
+        const scanOverlayCanvas = document.getElementById('scanOverlayCanvas');
+        const takePhotoBtn = document.getElementById('takePhotoBtn');
+        const ocrLoadingOverlay = document.getElementById('ocrLoadingOverlay');
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        let stream;
+
+        // Feed de la camara
+        async function startCamera() {
+            console.log("Requesting camera access.");
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                cameraFeed.srcObject = stream;
+                cameraFeed.play();
+                console.log("Camera feed started.");
+            } catch (err) {
+                console.error("Error accessing camera: ", err);
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+                    cameraFeed.srcObject = stream;
+                    cameraFeed.play();
+                    console.log("Camera feed (user-facing) started.");
+                } catch (userErr) {
+                    console.error("Error accessing user-facing camera: ", userErr);
+                    alert("Error: Could not access camera. Please ensure you have given permission and your device has a camera.");
+                }
+            }
+        }
+
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                cameraFeed.srcObject = null;
+                console.log("Camera stream stopped.");
+            }
+        }
+
+        function setupScanOverlay() {
+            if (!cameraFeed.videoWidth || !cameraFeed.videoHeight) {
+                return;
+            }
+
+            const videoWidth = cameraFeed.videoWidth;
+            const videoHeight = cameraFeed.videoHeight;
+
+            scanOverlayCanvas.width = videoWidth;
+            scanOverlayCanvas.height = videoHeight;
+
+            const ctx = scanOverlayCanvas.getContext('2d');
+            
+            const overlayWidth = videoWidth * 0.7;
+            const overlayHeight = videoHeight * 0.15;
+            const overlayX = (videoWidth - overlayWidth) / 2;
+            const overlayY = (videoHeight - overlayHeight) / 2;
+
+            ctx.clearRect(0, 0, scanOverlayCanvas.width, scanOverlayCanvas.height);
+
+            // Rectangulo de alineacion
+            ctx.strokeStyle = '#00ff00'; // Borde verde
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]); // Linea punteada
+            ctx.strokeRect(overlayX, overlayY, overlayWidth, overlayHeight);
+
+            // Instrucciones de texto
+            ctx.font = '24px Arial';
+            ctx.fillStyle = '#00ff00';
+            ctx.textAlign = 'center';
+            ctx.fillText('{% trans "Align ISBN here" %}', videoWidth / 2, overlayY - 10);
+
+            console.log("Scan overlay setup complete.");
+        }
+
+        cameraFeed.addEventListener('loadedmetadata', setupScanOverlay);
+
+        function drawCameraFeed() {
+            if (cameraFeed.paused || cameraFeed.ended) {
+                return;
+            }
+            const ctx = scanOverlayCanvas.getContext('2d');
+            
+            ctx.clearRect(0, 0, scanOverlayCanvas.width, scanOverlayCanvas.height);
+
+
+            ctx.drawImage(cameraFeed, 0, 0, scanOverlayCanvas.width, scanOverlayCanvas.height);
+
+            setupScanOverlay(); 
+            requestAnimationFrame(drawCameraFeed);
+        }
+
+        cameraFeed.addEventListener('play', () => {
+            console.log("Camera feed playing, starting drawing loop.");
+            requestAnimationFrame(drawCameraFeed);
+        });
+
+        if (takePhotoBtn) {
+            takePhotoBtn.addEventListener('click', async () => {
+                console.log("Take Photo button clicked.");
+                if (!stream) {
+                    alert("{% trans 'Camera not active. Please ensure camera access and try again.' %}");
+                    return;
+                }
+
+                ocrLoadingOverlay.style.display = 'flex';
+                takePhotoBtn.disabled = true;
+
+                const videoWidth = cameraFeed.videoWidth;
+                const videoHeight = cameraFeed.videoHeight;
+
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = videoWidth;
+                tempCanvas.height = videoHeight;
+                const tempCtx = tempCanvas.getContext('2d');
+                tempCtx.drawImage(cameraFeed, 0, 0, videoWidth, videoHeight);
+
+                const cropWidth = videoWidth * 0.7;
+                const cropHeight = videoHeight * 0.15;
+                const cropX = (videoWidth - cropWidth) / 2;
+                const cropY = (videoHeight - cropHeight) / 2;
+
+                const croppedCanvas = document.createElement('canvas');
+                croppedCanvas.width = cropWidth;
+                croppedCanvas.height = cropHeight;
+                const croppedCtx = croppedCanvas.getContext('2d');
+                croppedCtx.drawImage(tempCanvas, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+
+                const imageData = croppedCanvas.toDataURL('image/jpeg', 0.9); 
+
+                try {
+                    const response = await fetch('{% url "ocr_isbn" %}', { 
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken
+                        },
+                        body: JSON.stringify({ image_data: imageData })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || '{% trans "Failed to process image." %}');
+                    }
+
+                    const result = await response.json();
+                    if (result.isbn) {
+                        alert('{% trans "ISBN scanned successfully!" %}\nISBN: ' + result.isbn);
+                        window.location.href = `{% url 'add_book_by_isbn' %}?isbn=${encodeURIComponent(result.isbn)}`;
+                    } else {
+                        alert('{% trans "No ISBN found in the scanned image. Please try again." %}');
+                    }
+                } catch (error) {
+                    console.error("OCR scan failed:", error);
+                    alert('{% trans "Error during ISBN scan:" %} ' + error.message);
+                } finally {
+                    ocrLoadingOverlay.style.display = 'none'; 
+                    takePhotoBtn.disabled = false;
+                    stopCamera();
+                }
+            });
+        }
+
+        startCamera();
+
+        window.addEventListener('beforeunload', stopCamera);
+    });
+</script>
+{% endblock %}

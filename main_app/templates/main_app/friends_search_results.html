@@ -1,0 +1,33 @@
+{% extends 'main_app/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Friend Search Results" %}{% endblock %}
+
+{% block content %}
+    <h2 class="section-title mb-4">{% trans "Friend Search Results for" %} "{{ query }}"</h2>
+
+    {% if users_found %}
+        <div class="row">
+            {% for user_obj in users_found %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card p-3 d-flex flex-row align-items-center rounded-material elevation-1">
+                        <img src="{% static 'images/default_profile.png' %}" alt="Profile Image" class="profile-img me-3" style="width: 45px; height: 45px;">
+                        <div>
+                            <h5 class="mb-0">{{ user_obj.display_name }}</h5>
+                            <small class="text-muted">@{{ user_obj.username }}</small>
+                        </div>
+                        <div class="ms-auto">
+                            <a href="{% url 'user_profile' user_obj.pk %}" class="btn btn-sm btn-outline-primary rounded-pill">{% trans "View Profile" %}</a>
+                            {# Botón para enviar solicitud de amistad (placeholder) #}
+                            <button type="button" class="btn btn-sm btn-primary rounded-pill ms-2 disabled">{% trans "Add Friend" %}</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="lead">{% trans "No users found matching your search." %}</p>
+    {% endif %}
+
+{% endblock content %}

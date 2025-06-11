@@ -9,7 +9,6 @@ python manage.py runserver
 ```
 
 ```
-sudo dnf install node
-sudo apt install node *
-brew install node
+sudo dnf install tesseract tesseract-devel
+brew install tesseract
 ```

@@ -1,35 +1,179 @@
-{% load i18n %} {# Carga las etiquetas de i18n #}
-<!DOCTYPE html>
-<html lang="{{ request.language_code }}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% trans "Home Page" %}</title>
-    {# Enlace a los archivos CSS de Bootstrap #}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-</head>
-<body class="bg-body text-body">
+{% extends 'main_app/base.html' %} 
+{% load i18n %}
+{% load static %}
+{% load custom_filters %}
 
-    <div class="container mt-5">
-        <h2 class="mb-4">{% trans "Home Page" %}</h2> 
-        <p class="lead">{{ message }}</p>
+{% block title %}{% trans "Home Page" %}{% endblock %} {# Define el título de la página #}
 
-        {% if user.is_authenticated %}
-            <p><a href="{% url 'logout' %}" class="btn btn-danger">{% trans "Logout" %}</a></p>
-        {% else %}
-            <p>
-                <a href="{% url 'login' %}" class="btn btn-primary me-2">{% trans "Login" %}</a> 
-                <a href="{% url 'signup' %}" class="btn btn-secondary">{% trans "Sign Up" %}</a>
-            </p>
-        {% endif %}
+{% block content %} {# Todo el contenido de la página va dentro de este bloque #}
 
-        <hr class="my-4"> 
-        <form action="{% url 'set_language' %}" method="post" class="form-inline">{% csrf_token %}
+    {% comment %} {# Barra de Búsqueda y Elementos de la Derecha (visible solo si autenticado) #}
+    {% if user.is_authenticated %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="flex-grow-1 me-3"> {# El campo de búsqueda ocupa el espacio disponible #}
+            {# AHORA EL FORMULARIO DE BÚSQUEDA REDIRIGE A LA VISTA search_results #}
+            <form action="{% url 'search_results' %}" method="get" class="d-flex">
+                <input type="text" name="q" class="form-control search-input elevation-1" placeholder="{% trans 'Search for books or users...' %}" value="{{ request.GET.q|default:'' }}">
+                <button type="submit" class="btn btn-primary ms-2 rounded-pill">{% trans "Search" %}</button>
+            </form>
+        </div>
+        {# Iconos de la derecha #}
+        <div class="d-flex align-items-center">
+             {# Icono de Favoritos/Estrella (placeholder) #}
+             <a href="#" class="text-body"><span class="material-icons">star</span></a>
+        </div>
+    </div>
+    {% endif %} {% endcomment %}
 
+    {# Sección para "Todos los Libros" #}
+    <div class="carousel-section">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="section-title">{% trans "Explore All Books" %}</h3>
+            <a href="{% url 'all_books' %}" class="see-more-link">{% trans "See more" %} →</a>
+        </div>
+        <p class="lead">{% trans "Click 'See more' to browse our entire collection." %}</p>
+    </div>
+
+
+    {# Sección de Carrusel "Basados en tus gustos" (Solo si autenticado) #}
+    {% if user.is_authenticated %}
+    <div class="carousel-section">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="section-title">{% trans "Based on your tastes" %}</h3>
+            <a href="{% url 'view_all_recommended' %}" class="see-more-link">{% trans "See more" %} →</a>
+        </div>
+        {# Carrusel de Bootstrap #}
+        <div id="tastesCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% if recommended_books %}
+                    {# Usamos el filtro 'chunk' para dividir la lista en grupos de 4 #}
+                    {% for chunk in recommended_books|chunk:4 %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <div class="row">
+                                {% for book in chunk %}
+                                    <div class="col-md-3 mb-3">
+                                        <div class="card h-100 rounded-material elevation-1">
+                                            {# Usar la URL de Open Library si book.isbn existe y tiene un valor #}
+                                            <img src="{% if book.cover %}{{ book.cover.url }}{% elif book.isbn %}https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-L.jpg{% else %}{% static 'images/default_book.png' %}{% endif %}" class="card-img-top" alt="{{ book.title }}">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ book.title }}</h5>
+                                                <p class="card-text text-muted mb-2">
+                                                    {% if book.authors.all %}
+                                                        {% for author in book.authors.all %}
+                                                            {{ author.name }}{% if not forloop.last %}, {% endif %}
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        {% trans "Unknown Author" %}
+                                                    {% endif %}
+                                                </p>
+                                                <a href="{% url 'book_detail' book.pk %}" class="btn btn-sm btn-outline-primary rounded-pill mt-2">{% trans "Details" %}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="carousel-item active">
+                        <div class="col-12">
+                            <p>{% trans "No recommended books found based on your tastes." %}</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            {# Controles del carrusel (solo si hay más de 4 libros) #}
+            {% if recommended_books|length > 4 %}
+                <button class="carousel-control-prev" type="button" data-bs-target="#tastesCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">{% trans "Previous" %}</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#tastesCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">{% trans "Next" %}</span>
+                </button>
+            {% endif %}
+        </div>
+    </div>
+
+    {# Sección de Carrusel "Tendencias"#}
+     
+    {% else %}
+         {# Mensaje para usuarios no autenticados en el área de contenido principal #}
+         <div class="text-center mt-5 p-5 bg-light rounded-material elevation-1">
+             <h3>{% trans "Discover amazing books!" %}</h3>
+             <p class="lead">{% trans "Login or sign up to get personalized recommendations and track your reading journey." %}</p>
+             <a href="{% url 'login' %}" class="btn btn-primary btn-lg me-3">{% trans "Login Now" %}</a>
+             <a href="{% url 'signup' %}" class="btn btn-secondary btn-lg">{% trans "Create Account" %}</a>
+         </div>
+    {% endif %}
+
+    <div class="carousel-section">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="section-title">{% trans "Trending" %}</h3>
+            <a href="{% url 'view_all_trending' %}" class="see-more-link">{% trans "See more" %} →</a>
+        </div>
+        {# Carrusel de Bootstrap #}
+        <div id="trendingCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% if trending_books %}
+                    {% for chunk in trending_books|chunk:4 %} {# Usamos el filtro 'chunk' #}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <div class="row">
+                                {% for book in chunk %}
+                                    <div class="col-md-3 mb-3">
+                                        <div class="card h-100 rounded-material elevation-1">
+                                            {# Usar la URL de Open Library si book.isbn existe y tiene un valor #}
+                                            <img src="{% if book.cover %}{{ book.cover.url }}{% elif book.isbn %}https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-L.jpg{% else %}{% static 'images/default_book.png' %}{% endif %}" class="card-img-top" alt="{{ book.title }}">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ book.title }}</h5>
+                                                <p class="card-text text-muted mb-2">
+                                                    {% if book.authors.all %}
+                                                        {% for author in book.authors.all %}
+                                                            {{ author.name }}{% if not forloop.last %}, {% endif %}
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        {% trans "Unknown Author" %}
+                                                    {% endif %}
+                                                </p>
+                                                <a href="{% url 'book_detail' book.pk %}" class="btn btn-sm btn-outline-primary rounded-pill mt-2">{% trans "Details" %}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="carousel-item active">
+                        <div class="col-12">
+                            <p>{% trans "No trending books found." %}</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            {# Controles del carrusel (solo si hay más de 4 libros) #}
+            {% if trending_books|length > 4 %}
+                <button class="carousel-control-prev" type="button" data-bs-target="#trendingCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">{% trans "Previous" %}</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#trendingCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">{% trans "Next" %}</span>
+                </button>
+            {% endif %}
+        </div>
+    </div>
+
+
+    {# Formulario para cambiar de idioma #}
+    {% comment %} <div class="mt-5 text-center">
+        <form action="{% url 'set_language' %}" method="post" class="form-inline d-inline-flex align-items-center">{% csrf_token %}
             <input name="next" type="hidden" value="{{ request.get_full_path|slice:'3:' }}">
-            <div class="form-group mb-2">
-                <label for="language" class="me-2">{% trans "Language" %}:</label> 
-                <select name="language" id="language" class="form-select d-inline-block w-auto" onchange="this.form.submit()"> 
+            <div class="form-group mb-0 me-2">
+                <label for="language" class="me-2">{% trans "Language" %}:</label>
+                <select name="language" id="language" class="form-select d-inline-block w-auto" onchange="this.form.submit()">
                     {% get_language_info_list for LANGUAGES as languages %}
                     {% for language in languages %}
                         <option value="{{ language.code }}"{% if language.code == request.language_code %} selected{% endif %}>
@@ -38,12 +182,8 @@
                     {% endfor %}
                 </select>
             </div>
-            {# Botón de submit si JavaScript está deshabilitado #}
             <noscript><button type="submit" class="btn btn-primary">{% trans 'Go' %}</button></noscript>
         </form>
+    </div> {% endcomment %}
 
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-</body>
-</html>
+{% endblock content %}

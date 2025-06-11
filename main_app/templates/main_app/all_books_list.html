@@ -1,0 +1,72 @@
+{% extends 'main_app/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ section_title }}{% endblock %}
+
+{% block content %}
+    <h2 class="section-title mb-4">{{ section_title }}</h2>
+
+    <div class="d-flex justify-content-end mb-3">
+        <form method="get" class="d-flex align-items-center">
+            <label for="sort_by" class="me-2">{% trans "Sort by" %}:</label>
+            <select name="sort_by" id="sort_by" class="form-select rounded-pill w-auto me-2" onchange="this.form.submit()">
+                <option value="title_asc" {% if current_sort == 'title_asc' %}selected{% endif %}>{% trans "Title (A-Z)" %}</option>
+                <option value="title_desc" {% if current_sort == 'title_desc' %}selected{% endif %}>{% trans "Title (Z-A)" %}</option>
+            </select>
+        </form>
+    </div>
+
+    {% if books %}
+        <div class="row">
+            {% for book in books %}
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card h-100 rounded-material elevation-1">
+                        {# La URL de la portada se generará automáticamente #}
+                        <img src="{% if book.cover %}{{ book.cover.url }}{% elif book.isbn %}https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-L.jpg{% else %}{% static 'images/default_book.png' %}{% endif %}" class="card-img-top" alt="{{ book.title }}">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <p class="card-text text-muted mb-2">
+                                {% if book.authors.all %}
+                                    {% for author in book.authors.all %}
+                                        {{ author.name }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    {% trans "Unknown Author" %}
+                                {% endif %}
+                            </p>
+                            <div class="mt-auto">
+                                <a href="{% url 'book_detail' book.pk %}" class="btn btn-sm btn-primary rounded-pill mb-2">{% trans "Details" %}</a>
+
+                                {% if user.is_authenticated %}
+                                    <form action="{% url 'add_to_wants_to_read' book.pk %}" method="post" class="d-inline-block">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm {% if book.pk in wants_to_read_book_ids %}btn-outline-secondary{% else %}btn-outline-info{% endif %} rounded-pill mb-2">
+                                            {% if book.pk in wants_to_read_book_ids %}
+                                                <i class="fas fa-check-circle"></i> {% trans "Want to Read" %}
+                                            {% else %}
+                                                <i class="fas fa-bookmark"></i> {% trans "Want to Read" %}
+                                            {% endif %}
+                                        </button>
+                                    </form>
+
+                                    {% if book.pk not in has_read_book_ids %}
+                                        <a href="{% url 'add_review_for_book' book.pk %}" class="btn btn-sm btn-outline-success rounded-pill mb-2">
+                                            <i class="fas fa-edit"></i> {% trans "Add Review" %}
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'add_review_for_book' book.pk %}" class="btn btn-sm btn-success rounded-pill mb-2">
+                                            <i class="fas fa-pen"></i> {% trans "Edit Review" %}
+                                        </a>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="lead">{% trans "No books found in this section." %}</p>
+    {% endif %}
+{% endblock content %}

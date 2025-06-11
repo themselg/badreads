@@ -1,0 +1,73 @@
+{% extends 'main_app/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% if popular_reviews %}{% trans "Popular Reviews" %}{% elif profile_user %}{% trans "Reviews by" %} {{ profile_user.display_name }}{% else %}{% trans "Reviews" %}{% endif %}{% endblock %}
+
+{% block content %}
+    <h2 class="section-title mb-4">
+        {% if popular_reviews %}
+            {% trans "Popular Reviews (Last 7 Days)" %}
+        {% elif profile_user %}
+            {% trans "Reviews by" %} {{ profile_user.display_name }}
+        {% else %}
+            {% trans "Reviews" %}
+        {% endif %}
+    </h2>
+
+    {% with reviews_list=popular_reviews|default:user_reviews %}
+        {% if reviews_list %}
+            <div class="row">
+                {% for review_obj in reviews_list %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card p-3 rounded-material elevation-1">
+                            <div class="d-flex align-items-center mb-2">
+                                {# Usa la imagen de perfil del review_obj.user si existe, de lo contrario el placeholder #}
+                                <img src="{% if review_obj.user.profile_picture %}{{ review_obj.user.profile_picture.url }}{% else %}{% static 'images/default_profile.png' %}{% endif %}" alt="Profile Image" class="profile-img me-2" style="width: 30px; height: 30px;">
+                                <h6 class="mb-0">
+                                    <a href="{% url 'user_profile' review_obj.user.pk %}">{{ review_obj.user.display_name }}</a>
+                                </h6>
+                                <small class="text-muted ms-auto">{% trans "on" %} {{ review_obj.review_date|date:"M d, Y" }}</small>
+                            </div>
+                            <h5 class="card-title"><a href="{% url 'book_detail' review_obj.book.pk %}" class="text-decoration-none text-body">{{ review_obj.book.title }}</a></h5>
+                            <p class="card-text">{{ review_obj.review }}</p>
+                            {% if review_obj.rating %}
+                                <p class="card-text">{% trans "Rating" %}: {{ review_obj.rating }}/5</p>
+                            {% endif %}
+                            <hr>
+                            <div class="d-flex justify-content-between align-items-center">
+                                {# Botón de Like #}
+                                <form action="{% url 'like_review' review_obj.pk %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill">
+                                        <span class="material-icons me-1" style="font-size: 18px;">thumb_up</span>
+                                        {{ review_obj.likes.count }} {% trans "Likes" %}
+                                    </button>
+                                </form>
+                                {# Enlace para ver detalles del libro #}
+                                <a href="{% url 'book_detail' review_obj.book.pk %}" class="btn btn-sm btn-link see-more-link">{% trans "View Book" %}</a>
+                                {# Botón de Eliminar Reseña (solo para el autor) #}
+                                {% if user.is_authenticated and user == review_obj.user %}
+                                    <form action="{% url 'delete_review' review_obj.pk %}" method="post" class="d-inline ms-2">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-danger rounded-pill" onclick="return confirm('{% trans "Are you sure you want to delete this review?" %}')">
+                                            {% trans "Delete" %}
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="lead">
+                {# Revisar el nombre de la variable para el mensaje apropiado #}
+                {% if popular_reviews is not None %}{% trans "No popular reviews found yet." %}
+                {% elif profile_user is not None %}{% trans "This user has not reviewed any books yet." %}
+                {% else %}{% trans "No reviews found." %}{% endif %}
+            </p>
+        {% endif %}
+    {% endwith %}
+
+{% endblock content %}

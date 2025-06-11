@@ -1,0 +1,36 @@
+{% extends 'main_app/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Contact Support" %}{% endblock %}
+
+{% block content %}
+    <h2 class="section-title mb-4">{% trans "Contact Support" %}</h2>
+
+    <div class="card p-4 rounded-material elevation-1 mb-4">
+        <p class="lead">{% trans "Have a question or need assistance? Send us a message!" %}</p>
+        <p>{% trans "Our support team will get back to you as soon as possible." %}</p>
+
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="name" class="form-label">{% trans "Your Name" %}</label>
+                <input type="text" class="form-control rounded-pill" id="name" name="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">{% trans "Your Email" %}</label>
+                <input type="email" class="form-control rounded-pill" id="email" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="subject" class="form-label">{% trans "Subject" %}</label>
+                <input type="text" class="form-control rounded-pill" id="subject" name="subject" required>
+            </div>
+            <div class="mb-3">
+                <label for="message" class="form-label">{% trans "Your Message" %}</label>
+                <textarea class="form-control rounded-material" id="message" name="message" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary rounded-pill">{% trans "Send Message" %}</button>
+        </form>
+
+        <p class="mt-4 text-muted">{% trans "You can also reach us at support@badreads.com" %}</p>
+    </div>
+{% endblock content %}

@@ -1,0 +1,283 @@
+{% extends 'main_app/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Settings" %}{% endblock %} 
+
+{% block content %}
+    <h2 class="section-title mb-4">{% trans "Settings" %}</h2>
+
+    {# Display mensajes de Django #}
+    {% if messages %}
+        <div class="mb-4">
+        {% for message in messages %}
+             {% if 'error' in message.tags %}<div class="alert alert-danger" role="alert">
+             {% elif 'success' in message.tags %}<div class="alert alert-success" role="alert">
+             {% elif 'warning' in message.tags %}<div class="alert alert-warning" role="alert">
+             {% elif 'info' in message.tags %}<div class="alert alert-info" role="alert">
+             {% else %}<div class="alert alert-primary" role="alert">{% endif %}
+                {{ message }}
+             </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+
+    {# Sección de Información General de la Cuenta #}
+    <div class="card p-4 rounded-material elevation-1 mb-4">
+        <h4 class="mb-3">{% trans "Account Information" %}</h4>
+        <p class="lead">{% trans "Manage your account details." %}</p>
+
+        {# Personalización del perfil (Enlace a la vista existente) #}
+        <div class="mb-3">
+            <h5>{% trans "Profile Customization" %}</h5>
+            <p>{% trans "Update your profile picture, display name, and bio." %}</p>
+            <a href="{% url 'edit_profile' request.user.pk %}" class="btn btn-primary rounded-pill">
+                {% trans "Edit Profile" %}
+            </a>
+        </div>
+
+        <hr class="my-4">
+
+        {# Cambiar nombre de usuario (Formulario básico) #}
+        <div class="mb-3">
+            <h5>{% trans "Change Username" %}</h5>
+            <p>{% trans "Your current username is" %}: <strong>@{{ request.user.username }}</strong></p>
+            <form action="{% url 'settings' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="change_username">
+                <div class="mb-3">
+                    <label for="{{ username_form.username.id_for_label }}" class="form-label">{% trans "New Username" %}</label>
+                    {{ username_form.username }}
+                    {% if username_form.username.errors %}
+                        <div class="text-danger small">{{ username_form.username.errors }}</div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary rounded-pill">{% trans "Update Username" %}</button>
+            </form>
+        </div>
+
+        <hr class="my-4">
+
+        {# Cambiar contraseña (Formulario básico) #}
+        <div class="mb-3">
+            <h5>{% trans "Change Password" %}</h5>
+            <p>{% trans "Update your account password." %}</p>
+            <form action="{% url 'settings' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="change_password">
+                <div class="mb-3">
+                    <label for="{{ password_form.old_password.id_for_label }}" class="form-label">{% trans "Current Password" %}</label>
+                    {{ password_form.old_password }}
+                    {% if password_form.old_password.errors %}
+                        <div class="text-danger small">{{ password_form.old_password.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="{{ password_form.new_password1.id_for_label }}" class="form-label">{% trans "New Password" %}</label>
+                    {{ password_form.new_password1 }}
+                    {% if password_form.new_password1.errors %}
+                        <div class="text-danger small">{{ password_form.new_password1.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="{{ password_form.new_password2.id_for_label }}" class="form-label">{% trans "Confirm New Password" %}</label>
+                    {{ password_form.new_password2 }}
+                    {% if password_form.new_password2.errors %}
+                        <div class="text-danger small">{{ password_form.new_password2.errors }}</div>
+                    {% endif %}
+                </div>
+                {% if password_form.non_field_errors %}
+                    <div class="text-danger small">{{ password_form.non_field_errors }}</div>
+                {% endif %}
+                <button type="submit" class="btn btn-primary rounded-pill">{% trans "Change Password" %}</button>
+            </form>
+        </div>
+    </div>
+
+    {# Sección de Privacidad #}
+    <div class="card p-4 rounded-material elevation-1 mb-4">
+        <h4 class="mb-3">{% trans "Privacy Settings" %}</h4>
+
+        {# Hacer el perfil público o privado #}
+        <div class="mb-3">
+            <h5>{% trans "Profile Visibility" %}</h5>
+            <p>{% trans "Control who can see your profile and activity." %}</p>
+            <form action="{% url 'settings' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="toggle_profile_visibility">
+                <div class="form-check form-switch mb-3">
+                    {{ profile_visibility_form.is_public_profile }}
+                    <label class="form-check-label" for="{{ profile_visibility_form.is_public_profile.id_for_label }}">
+                        {% if profile_is_public %}{% trans "Your profile is Public" %}{% else %}{% trans "Your profile is Private" %}{% endif %}
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary rounded-pill">{% trans "Save Privacy" %}</button>
+            </form>
+        </div>
+
+        <hr class="my-4">
+
+        {# Bloquear usuarios (Enlace a una página de gestión) #}
+        <div class="mb-3">
+            <h5>{% trans "Blocked Users" %}</h5>
+            <p>{% trans "Manage users you have blocked from interacting with you." %}</p>
+            <a href="{% url 'manage_blocked_users' %}" class="btn btn-secondary rounded-pill">
+                {% trans "Manage Blocked Users" %}
+            </a>
+        </div>
+    </div>
+
+    {# Sección de Notificaciones #}
+    <div class="card p-4 rounded-material elevation-1 mb-4">
+        <h4 class="mb-3">{% trans "Notification Preferences" %}</h4>
+        <p>{% trans "Choose which notifications you receive." %}</p>
+        <form action="{% url 'settings' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="update_notification_settings">
+            <div class="form-check mb-2">
+                {{ notification_form.notify_new_followers }}
+                <label class="form-check-label" for="{{ notification_form.notify_new_followers.id_for_label }}">
+                    {% trans "New followers" %}
+                </label>
+            </div>
+            <div class="form-check mb-2">
+                {{ notification_form.notify_review_likes }}
+                <label class="form-check-label" for="{{ notification_form.notify_review_likes.id_for_label }}">
+                    {% trans "Likes on your reviews" %}
+                </label>
+            </div>
+            <div class="form-check mb-2">
+                {{ notification_form.notify_friend_activity }}
+                <label class="form-check-label" for="{{ notification_form.notify_friend_activity.id_for_label }}">
+                    {% trans "Friend activity (new books, reviews)" %}
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary rounded-pill mt-3">{% trans "Save Notifications" %}</button>
+        </form>
+    </div>
+
+    {# Sección de Preferencias Generales #}
+    <div class="card p-4 rounded-material elevation-1 mb-4">
+        <h4 class="mb-3">{% trans "General Preferences" %}</h4>
+
+        {# Sección para el cambio de idioma #}
+        <div class="mb-3">
+            <h5>{% trans "Display Language" %}</h5>
+            <form action="{% url 'set_language' %}" method="post" class="form-inline d-inline-flex align-items-center">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                <div class="form-group mb-0 me-2">
+                    <select name="language" id="language" class="form-select d-inline-block w-auto" onchange="this.form.submit()">
+                        {% get_language_info_list for LANGUAGES as languages %}
+                        {% for language in languages %}
+                            <option value="{{ language.code }}"{% if language.code == request.language_code %} selected{% endif %}>
+                                {{ language.name_local }} ({{ language.code }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <noscript><button type="submit" class="btn btn-primary">{% trans 'Go' %}</button></noscript>
+            </form>
+        </div>
+
+        <hr class="my-4">
+
+        {# Zona horaria #}
+        <div class="mb-3">
+            <h5>{% trans "Time Zone" %}</h5>
+            <p>{% trans "Set your local time zone for accurate timestamps." %}</p>
+            <form action="{% url 'settings' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="set_timezone">
+                <div class="mb-3">
+                    <label for="{{ timezone_form.timezone.id_for_label }}" class="form-label">{% trans "Select Time Zone" %}:</label>
+                    {{ timezone_form.timezone }}
+                    {% if timezone_form.timezone.errors %}
+                        <div class="text-danger small">{{ timezone_form.timezone.errors }}</div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary rounded-pill">{% trans "Save Time Zone" %}</button>
+            </form>
+        </div>
+
+        <hr class="my-4">
+
+        {% comment %} {# Tema (Claro/Oscuro) #}
+        <div class="mb-3">
+            <h5>{% trans "Theme" %}</h5>
+            <p>{% trans "Choose your preferred application theme." %}</p>
+            {# Changed action to 'settings' and added form_type #}
+            <form action="{% url 'settings' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="toggle_theme">
+                <div class="form-check form-switch mb-3">
+                    {{ theme_form.is_dark_theme }}
+                    <label class="form-check-label" for="{{ theme_form.is_dark_theme.id_for_label }}">
+                        {% if current_theme_is_dark %}{% trans "Dark Theme" %}{% else %}{% trans "Light Theme" %}{% endif %}
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary rounded-pill">{% trans "Save Theme" %}</button>
+            </form>
+        </div>
+    </div> {% endcomment %}
+
+    {# Sección de Información y Ayuda #}
+    <div class="card p-4 rounded-material elevation-1 mb-4">
+        <h4 class="mb-3">{% trans "Information & Support" %}</h4>
+
+        {# Acerca de #}
+        <div class="mb-3">
+            <h5>{% trans "About" %}</h5>
+            <p>{% trans "BadReads is a book tracking and social reading application." %}</p>
+            <p>{% trans "Version" %}: 1.0</p>
+            <p>{% trans "Developed by" %}: Guillermo Francisco Themsel Montes</p>
+        </div>
+
+        <hr class="my-4">
+
+        {# Ayuda/Soporte #}
+        <div class="mb-3">
+            <h5>{% trans "Help & Support" %}</h5>
+            <p>{% trans "Need assistance? Visit our help center or contact support." %}</p>
+            <a href="{% url 'help_center' %}" class="btn btn-info rounded-pill me-2">{% trans "Help Center" %}</a>
+            <a href="{% url 'contact_support' %}" class="btn btn-info rounded-pill">{% trans "Contact Support" %}</a>
+        </div>
+    </div>
+
+    {# Eliminar cuenta#}
+    <div class="card p-4 rounded-material elevation-1 border border-danger mb-4">
+        <h4 class="mb-3 text-danger">{% trans "Danger Zone" %}</h4>
+        <div class="mb-3">
+            <h5>{% trans "Delete Account" %}</h5>
+            <p class="text-danger">{% trans "Permanently delete your account and all associated data. This action cannot be undone." %}</p>
+            {# El botón activaría un modal de confirmación antes de enviar el formulario #}
+            <button type="button" class="btn btn-danger rounded-pill" data-bs-toggle="modal" data-bs-target="#confirmDeleteAccountModal">
+                {% trans "Delete My Account" %}
+            </button>
+        </div>
+    </div>
+
+    {# Modal de Confirmación para Eliminar Cuenta #}
+    <div class="modal fade" id="confirmDeleteAccountModal" tabindex="-1" aria-labelledby="confirmDeleteAccountModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-material elevation-2">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteAccountModalLabel">{% trans "Confirm Account Deletion" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>{% trans "Are you absolutely sure you want to delete your account? All your data will be permanently removed." %}</p>
+                    <p class="text-danger">{% trans "This action cannot be undone." %}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <form action="{% url 'delete_account' %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger rounded-pill">{% trans "Yes, Delete My Account" %}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

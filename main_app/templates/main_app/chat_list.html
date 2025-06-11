@@ -1,0 +1,59 @@
+{% extends 'main_app/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "My Chats" %}{% endblock %}
+
+{% block content %}
+    <h2 class="section-title mb-4">{% trans "My Chats" %}</h2>
+
+    {% if messages %}
+        <div class="mb-4">
+        {% for message in messages %}
+             {% if 'error' in message.tags %}<div class="alert alert-danger" role="alert">
+             {% else %}<div class="alert alert-{{ message.tags }}" role="alert">{% endif %}
+                {{ message }}
+             </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="row">
+        {% if chats_info %}
+            {% for chat_item in chats_info %}
+                <div class="col-md-6 mb-3">
+                    <a href="{% url 'chat_room' chat_item.other_participant.pk %}" class="card p-3 rounded-material elevation-1 d-flex flex-row align-items-center text-decoration-none text-body chat-card">
+                        <img src="{% if chat_item.other_participant.profile_picture %}{{ chat_item.other_participant.profile_picture.url }}{% else %}{% static 'images/profile_placeholder.png' %}{% endif %}" alt="Profile Image" class="profile-img me-3">
+                        <div class="flex-grow-1">
+                            <h5 class="mb-1">{{ chat_item.other_participant.display_name }}</h5>
+                            <p class="text-muted mb-0">
+                                {% if chat_item.last_message %}
+                                    {{ chat_item.last_message.message|truncatechars:50 }}
+                                {% else %}
+                                    <em>{% trans "No messages yet." %}</em>
+                                {% endif %}
+                            </p>
+                        </div>
+                        {% if chat_item.last_message %}
+                            <small class="text-muted ms-3">{{ chat_item.last_message.timestamp|date:"H:i" }}</small>
+                        {% endif %}
+                    </a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center">
+                <p class="lead">{% trans "You don't have any active chats yet." %}</p>
+                <p>{% trans "Start by following people. If they follow you back, you can chat!" %}</p>
+                <a href="{% url 'friends_search' %}" class="btn btn-primary rounded-pill">{% trans "Find Friends" %}</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}
+
+{% block extra_css %}
+<style>
+    .chat-card:hover {
+        background-color: var(--md-sys-color-surface-variant); /* Lighter background on hover */
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'main_app/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Search Results" %}{% endblock %}
+
+{% block content %}
+    <h2 class="section-title mb-4">{% trans "Search Results for" %} "{{ query }}"</h2>
+
+    {% if books %}
+        <h3 class="section-title mt-4 mb-3">{% trans "Books" %}</h3>
+        <div class="row">
+            {% for book in books %}
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card h-100 rounded-material elevation-1">
+                        <img src="{% if book.cover %}{{ book.cover.url }}{% elif book.isbn %}https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-L.jpg{% else %}{% static 'images/default_book.png' %}{% endif %}" class="card-img-top" alt="{{ book.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                                <p class="card-text text-muted mb-2">
+                                    {% if book.authors.all %}
+                                        {% for author in book.authors.all %}
+                                            {{ author.name }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        {% trans "Unknown Author" %}
+                                    {% endif %}
+                                </p>
+                            <a href="{% url 'book_detail' book.pk %}" class="btn btn-sm btn-primary rounded-pill mt-2">{% trans "Details" %}</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="lead">{% trans "No books found matching your search." %}</p>
+    {% endif %}
+
+    <hr class="my-5">
+
+    {% if users %}
+        <h3 class="section-title mt-4 mb-3">{% trans "Users" %}</h3>
+        <div class="row">
+            {% for user_obj in users %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card p-3 d-flex flex-row align-items-center rounded-material elevation-1">
+                        {# Usa la imagen de perfil del user_obj si existe, de lo contrario el placeholder #}
+                        <img src="{% if user_obj.profile_picture %}{{ user_obj.profile_picture.url }}{% else %}{% static 'images/default_profile.png' %}{% endif %}" alt="Profile Image" class="profile-img me-3" style="width: 45px; height: 45px;">
+                        <div>
+                            <h5 class="mb-0">{{ user_obj.display_name }}</h5>
+                            <small class="text-muted">@{{ user_obj.username }}</small>
+                        </div>
+                        <div class="ms-auto">
+                            <a href="{% url 'user_profile' user_obj.pk %}" class="btn btn-sm btn-outline-primary rounded-pill">{% trans "View Profile" %}</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="lead">{% trans "No users found matching your search." %}</p>
+    {% endif %}
+
+    {% if not books and not users %}
+        <p class="lead">{% trans "No results found for your search query." %}</p>
+    {% endif %}
+
+{% endblock content %}

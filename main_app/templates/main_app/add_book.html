@@ -1,0 +1,669 @@
+{% extends 'main_app/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Add New Book" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Estilos específicos para el campo de subida de imagen y preview */
+    .image-upload-area {
+        border: 2px dashed var(--tw-colors-neutral-300);
+        border-radius: var(--tw-border-radius-material);
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color 0.3s ease;
+        background-color: var(--tw-colors-neutral-50);
+    }
+    .image-upload-area:hover {
+        border-color: var(--tw-colors-primary-DEFAULT);
+    }
+    .image-preview {
+        max-width: 200px;
+        max-height: 250px;
+        border-radius: var(--tw-border-radius-material);
+        object-fit: contain;
+        border: 1px solid var(--tw-colors-neutral-200);
+        box-shadow: var(--tw-box-shadow-material-sm);
+    }
+    /* Estilos para el campo de autocompletar */
+    .autocomplete-container {
+        position: relative;
+    }
+    .autocomplete-results {
+        position: absolute;
+        z-index: 100;
+        background-color: white;
+        border: 1px solid var(--tw-colors-neutral-300);
+        border-radius: var(--tw-border-radius-material);
+        max-height: 200px;
+        overflow-y: auto;
+        width: 100%;
+        box-shadow: var(--tw-box-shadow-material-md);
+    }
+    .autocomplete-result-item {
+        padding: 0.75rem 1rem;
+        cursor: pointer;
+        border-bottom: 1px solid var(--tw-colors-neutral-100);
+    }
+    .autocomplete-result-item:hover {
+        background-color: var(--tw-colors-neutral-100);
+    }
+    .autocomplete-result-item:last-child {
+        border-bottom: none;
+    }
+    .selected-tags-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+    .selected-tag {
+        background-color: var(--tw-colors-primary-light);
+        color: #000; /* CAMBIADO: Texto negro para mejor visibilidad */
+        padding: 0.3rem 0.7rem;
+        border-radius: 9999px; /* rounded-full */
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .selected-tag .remove-tag-btn {
+        background: none;
+        border: none;
+        color: #000; /* CAMBIADO: Texto negro para el botón de eliminar */
+        font-size: 0.9rem;
+        cursor: pointer;
+        opacity: 0.8;
+    }
+    .selected-tag .remove-tag-btn:hover {
+        opacity: 1;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <h2 class="section-title mb-4">{% trans "Add New Book" %}</h2>
+
+    {% if messages %}
+        <div class="mb-4">
+        {% for message in messages %}
+             {% if 'error' in message.tags %}<div class="alert alert-danger" role="alert">
+             {% else %}<div class="alert alert-{{ message.tags }}" role="alert">{% endif %}>
+                {{ message }}
+             </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+
+    {# Opciones de Añadir con ISBN/OCR #}
+    <div class="row mb-4 text-center">
+        <div class="col-md-6 mb-3">
+            <div class="card p-3 rounded-material elevation-1 h-100">
+                <span class="material-icons" style="font-size: 3rem; color: var(--tw-colors-secondary-DEFAULT);">qr_code_scanner</span>
+                <h5 class="card-title mt-2">{% trans "Add with ISBN" %}</h5>
+                <p>{% trans "Quickly add a book using its ISBN and pre-fill details." %}</p>
+                <a href="{% url 'add_book_by_isbn' %}" class="btn btn-outline-primary rounded-pill mt-2">{% trans "Use ISBN" %}</a>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card p-3 rounded-material elevation-1 h-100">
+                <span class="material-icons" style="font-size: 3rem; color: var(--secondary-color);">camera_alt</span>
+                <h5 class="card-title mt-2">{% trans "Add with Camera Scan (OCR)" %}</h5>
+                <p>{% trans "Scan the ISBN from an image using your camera." %}</p>
+                {# Este botón ahora redirige a la nueva página dedicada al OCR #}
+                <a href="{% url 'add_book_by_ocr' %}" class="btn btn-outline-primary rounded-pill mt-2">{% trans "Use Camera Scan" %}</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card p-4 rounded-material elevation-1 mb-4">
+        <h5 class="card-title">{% trans "Add Manually" %}</h5>
+        <form method="post" enctype="multipart/form-data" id="addBookForm">
+            {% csrf_token %}
+            <input type="hidden" name="action" id="formAction" value="preview">
+            <input type="hidden" name="cover_url_hidden" id="coverUrlHidden"> {# Para pasar la URL de la portada si viene de Open Library #}
+            <input type="hidden" name="authors_text" id="id_authors_text">
+            <input type="hidden" name="genres_text" id="id_genres_text">
+            <input type="hidden" name="formats_text" id="id_formats_text">
+            <input type="hidden" name="editorial_name" id="id_editorial_name">
+            <input type="hidden" name="language_name" id="id_language_name">
+
+
+            {# Campos renderizados automáticamente por Django #}
+            <div class="mb-3">
+                <label for="{{ form.title.id_for_label }}" class="form-label">{{ form.title.label }}</label>
+                {{ form.title }}
+                {% if form.title.help_text %}<div class="form-text text-muted">{{ form.title.help_text }}</div>{% endif %}
+                {% for error in form.title.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ form.isbn.id_for_label }}" class="form-label">{% trans "ISBN" %}</label>
+                <div class="d-flex align-items-center">
+                    {{ form.isbn }}
+                    <span id="isbn-loading-spinner" class="spinner-border spinner-border-sm text-primary ms-2" role="status" aria-hidden="true" style="display: none;"></span>
+                </div>
+                {% if form.isbn.help_text %}<div class="form-text text-muted">{{ form.isbn.help_text }}</div>{% endif %}
+                {% for error in form.isbn.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ form.release_date.id_for_label }}" class="form-label">{{ form.release_date.label }}</label>
+                {{ form.release_date }}
+                {% if form.release_date.help_text %}<div class="form-text text-muted">{{ form.release_date.help_text }}</div>{% endif %}
+                {% for error in form.release_date.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ form.edition_number.id_for_label }}" class="form-label">{{ form.edition_number.label }}</label>
+                {{ form.edition_number }}
+                {% if form.edition_number.help_text %}<div class="form-text text-muted">{{ form.edition_number.help_text }}</div>{% endif %}
+                {% for error in form.edition_number.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+            </div>
+
+            {# AUTORES - Campo dinámico con autocomplete y múltiples valores (un solo input) #}
+            <div class="mb-3">
+                <label class="form-label">{% trans "Authors" %}</label>
+                <div class="autocomplete-container">
+                    <input type="text" class="form-control autocomplete-input" id="authors-input" data-model="author" placeholder="Ej: Gabriel Garcia Marquez" autocomplete="off">
+                    <div class="autocomplete-results" id="author-results-global"></div>
+                </div>
+                <div class="selected-tags-container" id="selected-authors-container"></div>
+                <div class="form-text text-muted">{{ form.authors_text.help_text }}</div>
+                {% for error in form.authors_text.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+            </div>
+
+            {# EDITORIAL - Campo con autocomplete (valor único) #}
+            <div class="mb-3">
+                <label class="form-label">{% trans "Editorial" %}</label>
+                <div class="autocomplete-container">
+                    <input type="text" class="form-control autocomplete-input" id="editorial-input" data-model="editorial" placeholder="Ej: Penguin Random House" autocomplete="off">
+                    <div class="autocomplete-results" id="editorial-results"></div>
+                </div>
+                <div class="form-text text-muted">{{ form.editorial_name.help_text }}</div>
+                {% for error in form.editorial_name.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+            </div>
+
+            {# LENGUAJE - Campo con autocomplete (valor único) #}
+            <div class="mb-3">
+                <label class="form-label">{% trans "Language" %}</label>
+                <div class="autocomplete-container">
+                    <input type="text" class="form-control autocomplete-input" id="language-input" data-model="language" placeholder="Ej: Spanish" autocomplete="off">
+                    <div class="autocomplete-results" id="language-results"></div>
+                </div>
+                <div class="form-text text-muted">{{ form.language_name.help_text }}</div>
+                {% for error in form.language_name.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+            </div>
+
+            {# GÉNEROS - Campo dinámico con autocomplete y múltiples valores (un solo input) #}
+            <div class="mb-3">
+                <label class="form-label">{% trans "Genres" %}</label>
+                <div class="autocomplete-container">
+                    <input type="text" class="form-control autocomplete-input" id="genres-input" data-model="genre" placeholder="Ej: Fantasy" autocomplete="off">
+                    <div class="autocomplete-results" id="genre-results-global"></div>
+                </div>
+                <div class="selected-tags-container" id="selected-genres-container"></div>
+                <div class="form-text text-muted">{{ form.genres_text.help_text }}</div>
+                {% for error in form.genres_text.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+            </div>
+
+            {# FORMATOS - Campo con autocomplete (valor único) #}
+            <div class="mb-3">
+                <label class="form-label">{% trans "Formats" %}</label>
+                <div class="autocomplete-container">
+                    <input type="text" class="form-control autocomplete-input" id="formats-input" data-model="format" placeholder="Ej: Hardcover" autocomplete="off">
+                    <div class="autocomplete-results" id="formats-results"></div>
+                </div>
+                <div class="form-text text-muted">{{ form.formats_text.help_text }}</div>
+                {% for error in form.formats_text.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+            </div>
+
+            {# Campo original_book #}
+            <div class="mb-3">
+                <label for="{{ form.original_book.id_for_label }}" class="form-label">{{ form.original_book.label }}</label>
+                {{ form.original_book }}
+                {% if form.original_book.help_text %}<div class="form-text text-muted">{{ form.original_book.help_text }}</div>{% endif %}
+                {% for error in form.original_book.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+            </div>
+
+
+            <div class="mb-3">
+                <label for="id_cover" class="form-label">{% trans "Book Cover" %}</label> {# Texto actualizado #}
+                <div class="image-upload-area" id="coverUploadArea">
+                    <span class="material-icons" style="font-size: 3rem; color: var(--tw-colors-primary-DEFAULT);">cloud_upload</span>
+                    <p class="text-muted">{% trans "Drag & drop an image or click to upload" %}</p>
+                    <input type="file" id="id_cover" name="cover" accept="image/*" class="d-none">
+                </div>
+                <div class="text-center mt-3">
+                    {# La imagen de preview puede venir de un archivo subido o de una URL de Open Library #}
+                    <img id="coverPreview" class="image-preview" src="{{ book_data_for_preview.temp_cover_url|default:'' }}" alt="{% trans 'Cover Preview' %}" style="{% if not book_data_for_preview.temp_cover_url %}display: none;{% endif %}">
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-secondary rounded-pill mt-3 me-2" id="previewBookBtn">{% trans "Preview Book" %}</button>
+            <button type="submit" class="btn btn-primary rounded-pill mt-3" id="saveBookBtn" style="display: none;">{% trans "Save Book" %}</button> {# Este botón estará oculto hasta después de la vista previa #}
+        </form>
+    </div>
+
+    {# Modal de Vista Previa del Libro #}
+    <div class="modal fade" id="bookPreviewModal" tabindex="-1" aria-labelledby="bookPreviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-material elevation-1">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title" id="bookPreviewModalLabel">{% trans "Book Preview" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalCoverPreview" src="{% static 'images/default_book.png' %}" class="img-fluid rounded-material mb-3" alt="{% trans 'Book Cover' %}" style="max-height: 300px; object-fit: cover;">
+                    <h4 id="modalBookTitle" class="text-primary"></h4>
+                    <p id="modalBookAuthor" class="text-muted"></p>
+                    <p><small class="text-muted">ISBN: <span id="modalBookISBN"></span> | {% trans "Release Date" %}: <span id="modalBookReleaseDate"></span></small></p>
+                    <p><small class="text-muted">{% trans "Edition Number" %}: <span id="modalBookEditionNumber"></span></small></p>
+                    <p><small class="text-muted">{% trans "Editorial" %}: <span id="modalBookEditorial"></span> | {% trans "Language" %}: <span id="modalBookLanguage"></span></small></p>
+                    <p><small class="text-muted">{% trans "Genres" %}: <span id="modalBookGenres"></span></small></p>
+                    <p><small class="text-muted">{% trans "Formats" %}: <span id="modalBookFormats"></span></small></p>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">{% trans "Edit" %}</button>
+                    <button type="button" class="btn btn-primary rounded-pill" id="confirmSaveBtn">{% trans "Confirm & Save" %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Script para pasar los datos de previsualización de forma segura #}
+    {{ book_data_for_preview|json_script:"book-data-for-preview"|default:"{}" }}
+    <script>
+        const showPreviewModalOnLoad = {{ show_preview_modal|yesno:"true,false" }};
+    </script>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Referencias a elementos del DOM
+        const coverInput = document.getElementById('id_cover');
+        const coverPreview = document.getElementById('coverPreview');
+        const coverUploadArea = document.getElementById('coverUploadArea');
+        // const isbnInput = document.getElementById('id_isbn');
+        const previewBookBtn = document.getElementById('previewBookBtn');
+        const confirmSaveBtn = document.getElementById('confirmSaveBtn');
+        const formAction = document.getElementById('formAction');
+        const bookPreviewModal = new bootstrap.Modal(document.getElementById('bookPreviewModal'));
+        const modalCoverPreview = document.getElementById('modalCoverPreview');
+        const coverUrlHiddenInput = document.getElementById('coverUrlHidden');
+        const defaultCoverStaticUrl = "{% static 'images/default_book.png' %}";
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        // const isbnLoadingSpinner = document.getElementById('isbn-loading-spinner');
+
+        // Referencias a los campos que se autocompletarán (para manual entry)
+        const titleInput = document.getElementById('id_title');
+        const releaseDateInput = document.getElementById('id_release_date');
+        const editionNumberInput = document.getElementById('id_edition_number');
+        const authorsInput = document.getElementById('authors-input');
+        const editorialInput = document.getElementById('editorial-input');
+        const languageInput = document.getElementById('language-input');
+        const genresInput = document.getElementById('genres-input');
+        const formatsInput = document.getElementById('formats-input');
+
+
+        // Funciones de Utilidad para Autocomplete y Campos Dinámicos
+        // Almacena los elementos de tags seleccionados para autores y géneros
+        const selectedAuthors = new Set();
+        const selectedGenres = new Set();
+        const selectedEditorial = { value: '' }; // Objeto mutable para valor único
+        const selectedLanguage = { value: '' };
+        const selectedFormats = { value: '' };
+
+        // Función para actualizar los campos hidden al enviar el formulario
+        function updateHiddenFields() {
+            document.getElementById('id_authors_text').value = Array.from(selectedAuthors).join(', ');
+            document.getElementById('id_genres_text').value = Array.from(selectedGenres).join(', ');
+            document.getElementById('id_editorial_name').value = selectedEditorial.value;
+            document.getElementById('id_language_name').value = selectedLanguage.value;
+            document.getElementById('id_formats_text').value = selectedFormats.value;
+        }
+
+        // Función para renderizar los tags seleccionados (para campos múltiples)
+        function renderSelectedTag(nameToRender, inputElement, modelName) {
+            let selectedTagsContainer = null;
+            let currentSelectionStore = null;
+
+            if (modelName === 'author') {
+                selectedTagsContainer = document.getElementById('selected-authors-container');
+                currentSelectionStore = selectedAuthors;
+            } else if (modelName === 'genre') {
+                selectedTagsContainer = document.getElementById('selected-genres-container');
+                currentSelectionStore = selectedGenres;
+            }
+
+            if (!selectedTagsContainer || !currentSelectionStore) return;
+
+            selectedTagsContainer.innerHTML = ''; 
+
+            currentSelectionStore.forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.classList.add('selected-tag');
+                tagElement.textContent = tag;
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.classList.add('remove-tag-btn');
+                removeBtn.innerHTML = '&times;';
+                removeBtn.addEventListener('click', function() {
+                    currentSelectionStore.delete(tag);
+                    renderSelectedTag(null, null, modelName);
+                    updateHiddenFields();
+                });
+                tagElement.appendChild(removeBtn);
+                selectedTagsContainer.appendChild(tagElement);
+            });
+            updateHiddenFields();
+        }
+
+        function setupAutocomplete(inputElement, modelName, isMultiple = false) {
+            // Determina dónde se mostrarán los resultados del autocompletado
+            let resultsDiv = inputElement.nextElementSibling; // Asume que .autocomplete-results es el siguiente hermano
+            if (!resultsDiv || !resultsDiv.classList.contains('autocomplete-results')) {
+                resultsDiv = document.createElement('div');
+                resultsDiv.classList.add('autocomplete-results');
+                inputElement.parentNode.insertBefore(resultsDiv, inputElement.nextSibling);
+            }
+            resultsDiv.style.display = 'none';
+
+            let currentSelectionStore = null;
+            if (isMultiple) {
+                if (modelName === 'author') currentSelectionStore = selectedAuthors;
+                else if (modelName === 'genre') currentSelectionStore = selectedGenres;
+            } else {
+                if (modelName === 'editorial') currentSelectionStore = selectedEditorial;
+                else if (modelName === 'language') currentSelectionStore = selectedLanguage;
+                else if (modelName === 'format') currentSelectionStore = selectedFormats;
+            }
+
+            let debounceTimeout;
+            inputElement.addEventListener('input', function() {
+                clearTimeout(debounceTimeout);
+                const query = this.value.trim();
+                resultsDiv.innerHTML = ''; // Limpia resultados anteriores
+                resultsDiv.style.display = 'none';
+
+                if (query.length < 2) {
+                    if (!isMultiple) { // Para campos únicos, actualiza el valor aunque la query sea corta
+                        currentSelectionStore.value = query;
+                        updateHiddenFields();
+                    }
+                    return;
+                }
+
+                debounceTimeout = setTimeout(async () => {
+                    try {
+                        const response = await fetch(`/autocomplete/${modelName}/?q=${encodeURIComponent(query)}`, {
+                            headers: { 'X-CSRFToken': csrfToken }
+                        });
+                        if (!response.ok) throw new Error('Network response was not ok.');
+                        const data = await response.json();
+
+                        if (data.length > 0) {
+                            data.forEach(item => {
+                                const resultItem = document.createElement('div');
+                                resultItem.classList.add('autocomplete-result-item');
+                                resultItem.textContent = item.name;
+                                resultItem.dataset.id = item.id;
+                                resultItem.dataset.name = item.name;
+                                resultItem.addEventListener('click', function(event) {
+                                    event.stopPropagation(); // Evita que el evento blur del input cierre inmediatamente
+                                    if (isMultiple) {
+                                        if (!currentSelectionStore.has(item.name)) { // Evita duplicados
+                                            currentSelectionStore.add(item.name);
+                                            renderSelectedTag(null, null, modelName); // Re-renderizar todos los tags
+                                        }
+                                        inputElement.value = ''; // Limpia el input después de seleccionar
+                                    } else {
+                                        inputElement.value = item.name;
+                                        currentSelectionStore.value = item.name;
+                                    }
+                                    resultsDiv.style.display = 'none';
+                                    updateHiddenFields(); // Actualiza el campo hidden inmediatamente
+                                });
+                                resultsDiv.appendChild(resultItem);
+                            });
+                            resultsDiv.style.display = 'block';
+                        } else {
+                            // Si no hay resultados, aún puedes permitir que el usuario escriba uno nuevo
+                            if (!isMultiple) {
+                                currentSelectionStore.value = query; // Permite guardar el nuevo valor directamente
+                                updateHiddenFields();
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error fetching autocomplete data:', error);
+                    }
+                }, 300); // Debounce de 300ms
+            });
+
+            // Ocultar resultados cuando se pierde el foco (con un pequeño delay)
+            inputElement.addEventListener('blur', function() {
+                setTimeout(() => {
+                    resultsDiv.style.display = 'none';
+                    // Si el campo no es múltiple, asegúrate de que el valor actual se guarde
+                    if (!isMultiple) {
+                        currentSelectionStore.value = inputElement.value.trim();
+                    } else if (inputElement.value.trim() && !currentSelectionStore.has(inputElement.value.trim())) {
+                        // Para campos múltiples, si hay texto y no se seleccionó nada, añádelo como un nuevo tag
+                        currentSelectionStore.add(inputElement.value.trim());
+                        renderSelectedTag(null, null, modelName);
+                        inputElement.value = ''; // Limpiar el input después de añadirlo como tag
+                    }
+                    updateHiddenFields(); // Asegúrate de que el campo hidden esté actualizado
+                }, 150); // Pequeño delay para permitir clic en resultado
+            });
+            inputElement.addEventListener('focus', function() {
+                // Mostrar resultados si ya hay contenido y se vuelve a enfocar
+                if (resultsDiv.children.length > 0 && inputElement.value.trim().length >= 2) {
+                    resultsDiv.style.display = 'block';
+                }
+            });
+            // Handle pressing Enter to add a custom value for multiple fields
+            inputElement.addEventListener('keydown', function(e) {
+                if (isMultiple && e.key === 'Enter' && this.value.trim()) {
+                    e.preventDefault(); // Prevenir el envío del formulario
+                    const valueToAdd = this.value.trim();
+                    if (!currentSelectionStore.has(valueToAdd)) {
+                        currentSelectionStore.add(valueToAdd);
+                        renderSelectedTag(null, null, modelName);
+                        this.value = ''; // Limpiar el input
+                        updateHiddenFields();
+                    }
+                }
+            });
+        }
+
+        // Lógica para campos múltiples (Autores, Géneros)
+        function setupMultiFieldLogic(inputElementId, modelName, selectedStore, initialText = '') {
+            const inputElement = document.getElementById(inputElementId);
+            
+            // Si hay valores iniciales, precargar el Set y renderizar los tags
+            const existingValuesArray = initialText.split(',').map(s => s.trim()).filter(s => s);
+            existingValuesArray.forEach(val => selectedStore.add(val));
+            renderSelectedTag(null, null, modelName);
+
+            setupAutocomplete(inputElement, modelName, true);
+        }
+
+        // Inicialización de Autocomplete para campos únicos
+        if (editorialInput) {
+            setupAutocomplete(editorialInput, 'editorial', false);
+            selectedEditorial.value = editorialInput.value.trim(); // Captura el valor inicial si existe
+            updateHiddenFields();
+        }
+
+        if (languageInput) {
+            setupAutocomplete(languageInput, 'language', false);
+            selectedLanguage.value = languageInput.value.trim(); // Captura el valor inicial si existe
+            updateHiddenFields();
+        }
+
+        if (formatsInput) {
+            setupAutocomplete(formatsInput, 'format', false);
+            selectedFormats.value = formatsInput.value.trim(); // Captura el valor inicial si existe
+            updateHiddenFields();
+        }
+        
+        // Inicializar lógica para autores y géneros (campos múltiples)
+        // initialAuthorsText y initialGenresText son cadenas vacías en add_book
+        setupMultiFieldLogic('authors-input', 'author', selectedAuthors, ""); 
+        setupMultiFieldLogic('genres-input', 'genre', selectedGenres, "");
+
+
+        // Lógica de la Portada del Libro
+        function showImagePreview(file) {
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    coverPreview.src = e.target.result;
+                    coverPreview.style.display = 'block';
+                    coverUrlHiddenInput.value = '';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                coverPreview.src = '';
+                coverPreview.style.display = 'none';
+            }
+        }
+
+        if (coverInput) {
+            coverInput.addEventListener('change', function() {
+                showImagePreview(this.files[0]);
+            });
+        }
+
+        if (coverUploadArea) {
+            coverUploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.classList.add('border-primary');
+            });
+
+            coverUploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.classList.remove('border-primary');
+            });
+
+            coverUploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.classList.remove('border-primary');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    coverInput.files = files;
+                    showImagePreview(files[0]);
+                }
+            });
+
+            coverUploadArea.addEventListener('click', function() {
+                coverInput.click();
+            });
+        }
+
+        // Lógica del Botón de Previsualización y Guardado
+        if (previewBookBtn) {
+            previewBookBtn.addEventListener('click', async function(event) {
+                event.preventDefault(); 
+                document.querySelectorAll('.autocomplete-input[data-model="author"]').forEach(input => {
+                    const val = input.value.trim();
+                    if (val && !selectedAuthors.has(val)) {
+                        selectedAuthors.add(val);
+                    }
+                });
+                document.querySelectorAll('.autocomplete-input[data-model="genre"]').forEach(input => {
+                    const val = input.value.trim();
+                    if (val && !selectedGenres.has(val)) {
+                        selectedGenres.add(val);
+                    }
+                });
+
+                selectedEditorial.value = editorialInput.value.trim();
+                selectedLanguage.value = languageInput.value.trim();
+                selectedFormats.value = formatsInput.value.trim();
+
+                updateHiddenFields();
+
+                const formElement = document.getElementById('addBookForm');
+            
+                formAction.value = 'preview'; // Reafirmar la acción
+                formElement.submit(); // Realiza el submit normal
+            });
+        }
+
+        if (confirmSaveBtn) {
+            confirmSaveBtn.addEventListener('click', function() {
+                
+                document.querySelectorAll('.autocomplete-input[data-model="author"]').forEach(input => {
+                    const val = input.value.trim();
+                    if (val && !selectedAuthors.has(val)) {
+                        selectedAuthors.add(val);
+                    }
+                });
+                document.querySelectorAll('.autocomplete-input[data-model="genre"]').forEach(input => {
+                    const val = input.value.trim();
+                    if (val && !selectedGenres.has(val)) {
+                        selectedGenres.add(val);
+                    }
+                });
+                selectedEditorial.value = editorialInput.value.trim();
+                selectedLanguage.value = languageInput.value.trim();
+                selectedFormats.value = formatsInput.value.trim();
+                
+                updateHiddenFields(); 
+                formAction.value = 'save'; 
+                document.getElementById('addBookForm').submit(); 
+            });
+        }
+
+        const bookDataScript = document.getElementById('book-data-for-preview');
+        let bookDataForPreview = null;
+        if (bookDataScript) {
+            const rawJsonString = bookDataScript.textContent.trim();
+            try {
+                if (rawJsonString) {
+                    bookDataForPreview = JSON.parse(rawJsonString);
+                }
+            } catch (e) {
+                console.error("Error parsing book_data_for_preview JSON:", e);
+            }
+        }
+
+        if (showPreviewModalOnLoad && bookDataForPreview) {
+            document.getElementById('modalBookTitle').textContent = bookDataForPreview.title || '{% trans "No Title" %}';
+            document.getElementById('modalBookAuthor').textContent = bookDataForPreview.authors_text || '{% trans "No Author" %}';
+            document.getElementById('modalBookISBN').textContent = bookDataForPreview.isbn || '{% trans "N/A" %}';
+            document.getElementById('modalBookReleaseDate').textContent = bookDataForPreview.release_date || '{% trans "N/A" %}';
+            document.getElementById('modalBookEditionNumber').textContent = bookDataForPreview.edition_number || '{% trans "N/A" %}';
+            document.getElementById('modalBookEditorial').textContent = bookDataForPreview.editorial_name || '{% trans "N/A" %}';
+            document.getElementById('modalBookLanguage').textContent = bookDataForPreview.language_name || '{% trans "N/A" %}';
+            document.getElementById('modalBookGenres').textContent = bookDataForPreview.genres_text || '{% trans "N/A" %}';
+            document.getElementById('modalBookFormats').textContent = bookDataForPreview.formats_text || '{% trans "N/A" %}';
+
+            if (bookDataForPreview.temp_cover_url) {
+                modalCoverPreview.src = bookDataForPreview.temp_cover_url;
+                modalCoverPreview.style.display = 'block';
+            } else if (bookDataForPreview.isbn) {
+
+                fetchCoverFromOpenLibrary(bookDataForPreview.isbn).then(url => {
+                    modalCoverPreview.src = url;
+                    modalCoverPreview.style.display = 'block';
+                });
+            } else {
+                modalCoverPreview.src = defaultCoverStaticUrl;
+                modalCoverPreview.style.display = 'block';
+            }
+            bookPreviewModal.show();
+        }
+    });
+</script>
+{% endblock %}

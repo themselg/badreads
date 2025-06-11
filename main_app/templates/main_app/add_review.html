@@ -1,0 +1,113 @@
+{% extends 'main_app/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Add Review" %}{% endblock %}
+
+{% block content %}
+    <h2 class="section-title mb-4">{% trans "Add Review for a Book" %}</h2>
+
+    {% if messages %}
+        <div class="mb-4">
+        {% for message in messages %}
+             {% if 'error' in message.tags %}<div class="alert alert-danger" role="alert">
+             {% else %}<div class="alert alert-{{ message.tags }}" role="alert">{% endif %}
+                {{ message }}
+             </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="card p-4 rounded-material elevation-1">
+
+        <form method="post" action="{% url 'add_review' %}"> 
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="id_book_search" class="form-label">{% trans "Search for a book" %}</label>
+                <input type="text" class="form-control" id="id_book_search" placeholder="{% trans 'Search by title or ISBN...' %}" onkeyup="searchBooksForReview(this.value)">
+                <small class="form-text text-muted">{% trans "Start typing to find a book you've read." %}</small>
+                <div id="bookSearchResults" class="list-group mt-2">
+                    {# Los resultados de la búsqueda de libros irían aquí, generados por JS #}
+                </div>
+            </div>
+
+            {# Campo oculto para el ID del libro seleccionado #}
+            <input type="hidden" id="id_selected_book_pk" name="book_pk">
+            <h5 class="mb-3">{% trans "Reviewing" %}: <span id="selectedBookTitle" class="text-primary">{% trans "None selected" %}</span></h5>
+
+
+            <div class="mb-3">
+                <label for="id_review" class="form-label">{% trans "Your Review" %}</label>
+                <textarea class="form-control" id="id_review" name="review" rows="5" placeholder="{% trans 'Write your thoughts about the book...' %}"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="id_rating" class="form-label">{% trans "Rating (0-5)" %}</label>
+                <input type="number" step="0.1" min="0" max="5" class="form-control" id="id_rating" name="rating" placeholder="4.5">
+            </div>
+
+            <button type="submit" class="btn btn-primary rounded-pill mt-3" id="submitReviewBtn">{% trans "Submit Review" %}</button>
+        </form>
+    </div>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+    // Placeholder JavaScript para la búsqueda de libros y selección
+    function searchBooksForReview(query) {
+        const resultsContainer = document.getElementById('bookSearchResults');
+        const selectedBookTitle = document.getElementById('selectedBookTitle');
+        const selectedBookPkInput = document.getElementById('id_selected_book_pk');
+
+        if (query.length < 3) { // Solo busca si la consulta tiene al menos 3 caracteres
+            resultsContainer.innerHTML = '';
+            return;
+        }
+
+    
+        const dummyBooks = [
+            { pk: 1, title: "The Lord of the Rings", author: "J.R.R. Tolkien" },
+            { pk: 2, title: "Pride and Prejudice", author: "Jane Austen" },
+            { pk: 3, title: "1984", author: "George Orwell" },
+            { pk: 4, title: "To Kill a Mockingbird", author: "Harper Lee" },
+        ];
+
+        let html = '';
+        const filteredBooks = dummyBooks.filter(book =>
+            book.title.toLowerCase().includes(query.toLowerCase()) ||
+            book.author.toLowerCase().includes(query.toLowerCase())
+        );
+
+        if (filteredBooks.length > 0) {
+            filteredBooks.forEach(book => {
+                html += `
+                    <button type="button" class="list-group-item list-group-item-action"
+                            onclick="selectBookForReview('${book.pk}', '${book.title}')">
+                        ${book.title} by ${book.author}
+                    </button>
+                `;
+            });
+        } else {
+            html = `<p class="list-group-item">{% trans "No books found." %}</p>`;
+        }
+        resultsContainer.innerHTML = html;
+    }
+
+    function selectBookForReview(pk, title) {
+        document.getElementById('id_selected_book_pk').value = pk;
+        document.getElementById('selectedBookTitle').textContent = title;
+        document.getElementById('bookSearchResults').innerHTML = '';
+    }
+
+    // Si vienes de add_review_for_book_view, preselecciona el libro
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookPk = urlParams.get('book_pk');
+        const bookTitle = urlParams.get('book_title'); // Pasa el título si es posible
+
+        if (bookPk && bookTitle) {
+            selectBookForReview(bookPk, bookTitle);
+        }
+    });
+</script>
+{% endblock %}

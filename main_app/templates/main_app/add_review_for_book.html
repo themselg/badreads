@@ -1,0 +1,46 @@
+{% extends 'main_app/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Add Review for" %} "{{ book.title }}"{% endblock %}
+
+{% block content %}
+    <h2 class="section-title mb-4">{% trans "Add Review for" %} "{{ book.title }}"</h2>
+
+    {% if messages %}
+        <div class="mb-4">
+        {% for message in messages %}
+             {% if 'error' in message.tags %}<div class="alert alert-danger" role="alert">
+             {% else %}<div class="alert alert-{{ message.tags }}" role="alert">{% endif %}
+                {{ message }}
+             </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="card p-4 rounded-material elevation-1">
+        <form method="post" action="{% url 'add_review_for_book' book.pk %}">
+            {% csrf_token %}
+            <div class="d-flex align-items-center mb-3">
+                <img src="{% if book.cover %}{{ book.cover.url }}{% elif book.isbn %}https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-L.jpg{% else %}{% static 'images/default_book.png' %}{% endif %}" class="me-3 rounded-material" alt="{% trans 'Book Cover' %}" style="width: 80px; height: 120px; object-fit: cover;">
+                <div>
+                    <h5 class="mb-1">{{ book.title }}</h5>
+                    <p class="text-muted mb-0">{% if book.authors.all %}{% for author in book.authors.all %}{{ author.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% else %}{% trans "Unknown Author" %}{% endif %}</p>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="id_review" class="form-label">{% trans "Your Review" %}</label>
+                <textarea class="form-control" id="id_review" name="review" rows="5" placeholder="{% trans 'Share your thoughts about this book...' %}"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="id_rating" class="form-label">{% trans "Rating (0-5)" %}</label>
+                <input type="number" step="0.1" min="0" max="5" class="form-control" id="id_rating" name="rating" placeholder="4.5">
+            </div>
+
+            <button type="submit" class="btn btn-primary rounded-pill mt-3">{% trans "Submit Review" %}</button>
+            <a href="{% url 'book_detail' book.pk %}" class="btn btn-outline-secondary rounded-pill mt-3 ms-2">{% trans "Cancel" %}</a>
+        </form>
+    </div>
+{% endblock content %}

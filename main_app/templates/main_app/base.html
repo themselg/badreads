@@ -1,0 +1,827 @@
+{% load i18n %}
+{% load static %} 
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}"> 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% trans "BadReads" %}{% endblock %}</title> 
+
+    {# Enlace a los archivos CSS de Bootstrap #}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+
+    {# Enlace a la fuente Inter de Google Fonts #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    {# Enlace a Material Icons #}
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    {# --- Estilos Personalizados para Material You --- #}
+    <style>
+        /* Definición de variables CSS para colores (Material You Design 3) */
+        :root {
+            --md-sys-color-primary: #6750A4; /* Azul oscuro/morado para botones, etc. */
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-primary-container: #EADDFF; /* Fondo de elementos primarios activos */
+            --md-sys-color-on-primary-container: #21005D;
+            --md-sys-color-primary-rgb: 103, 80, 164; /* RGB para uso en rgba() */
+
+
+            --md-sys-color-secondary: #625B71; /* Gris rosado para elementos secundarios */
+            --md-sys-color-on-secondary: #FFFFFF;
+            --md-sys-color-secondary-container: #E8DEF8;
+            --md-sys-color-on-secondary-container: #1D192B;
+
+            --md-sys-color-tertiary: #7D5260;
+            --md-sys-color-on-tertiary: #FFFFFF;
+            --md-sys-color-tertiary-container: #FFD8E4;
+            --md-sys-color-on-tertiary-container: #31111D;
+
+            --md-sys-color-background: #F2F2F7; /* Fondo general más claro */
+            --md-sys-color-on-background: #1C1B1F;
+            --md-sys-color-surface: #FFFFFF; /* Superficie de tarjetas y barra lateral */
+            --md-sys-color-on-surface: #1C1B1F;
+            --md-sys-color-surface-variant: #E7E0EC; /* Para campos de entrada */
+            --md-sys-color-on-surface-variant: #49454F;
+
+            --md-sys-color-outline: #79747E;
+            --md-sys-color-error: #BA1A1A;
+            --md-sys-color-on-error: #FFFFFF;
+            --md-sys-color-error-container: #FFDAD6;
+            --md-sys-color-on-error-container: #410002;
+
+            /* Sombras (Elevation) para Material You */
+            --md-sys-elevation-level1: 0px 1px 2px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.24);
+            --md-sys-elevation-level2: 0px 3px 6px rgba(0, 0, 0, 0.16), 0px 3px 6px rgba(0, 0, 0, 0.23);
+            --md-sys-elevation-level3: 0px 6px 12px rgba(0, 0, 0, 0.2), 0px 6px 12px rgba(0, 0, 0, 0.28);
+
+
+            /* Colores específicos del navegador (para la barra superior) */
+            --browser-bar-bg: #E0E0E0; /* Fondo de la barra del navegador */
+            --browser-search-bg: #FFFFFF; /* Fondo de la barra de búsqueda del navegador */
+            --browser-text-color: #424242;
+            --browser-icon-color: #616161;
+            --browser-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.08);
+
+             /* Colores para carrusel */
+             --carousel-arrow-bg-light: rgba(0, 0, 0, 0.5);
+             --carousel-arrow-hover-bg-light: rgba(0, 0, 0, 0.7);
+             --carousel-arrow-icon-light: white;
+        }
+
+        /* Adaptación al modo oscuro del sistema */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --md-sys-color-primary: #D0BCFF;
+                --md-sys-color-on-primary: #381E72;
+                --md-sys-color-primary-container: #4F378B;
+                --md-sys-color-on-primary-container: #EADDFF;
+                --md-sys-color-primary-rgb: 208, 188, 255;
+
+                --md-sys-color-secondary: #CCC2DC;
+                --md-sys-color-on-secondary: #332D41;
+                --md-sys-color-secondary-container: #4A4458;
+                --md-sys-color-on-secondary-container: #E8DEF8;
+
+                --md-sys-color-tertiary: #EFB8C8;
+                --md-sys-color-on-tertiary: #492532;
+                --md-sys-color-tertiary-container: #633B48;
+                --md-sys-color-on-tertiary-container: #FFD8E4;
+
+                --md-sys-color-background: #121212; /* Fondo oscuro */
+                --md-sys-color-on-background: #E6E1E5;
+                --md-sys-color-surface: #1E1E1E; /* Superficie oscura */
+                --md-sys-color-on-surface: #E6E1E5;
+                --md-sys-color-surface-variant: #49454F;
+                --md-sys-color-on-surface-variant: #CAC4D0;
+
+                --md-sys-color-outline: #938F99;
+                --md-sys-color-error: #FFB4AB;
+                --md-sys-color-on-error: #690005;
+                --md-sys-color-error-container: #93000A;
+                --md-sys-color-on-error-container: #FFDAD6;
+
+                --md-sys-elevation-level1: 0px 1px 2px rgba(255, 255, 255, 0.12), 0px 1px 3px rgba(255, 255, 255, 0.08);
+                --md-sys-elevation-level2: 0px 3px 6px rgba(255, 255, 255, 0.16), 0px 3px 6px rgba(255, 255, 255, 0.1);
+                --md-sys-elevation-level3: 0px 6px 12px rgba(255, 255, 255, 0.2), 0px 6px 12px rgba(255, 255, 255, 0.15);
+
+
+                --browser-bar-bg: #212121;
+                --browser-search-bg: #424242;
+                --browser-text-color: #BDBDBD;
+                --browser-icon-color: #BDBDBD;
+                --browser-shadow: none; /* Sombras menos pronunciadas en modo oscuro */
+
+                --carousel-arrow-bg-dark: rgba(255, 255, 255, 0.2);
+                --carousel-arrow-hover-bg-dark: rgba(255, 255, 255, 0.4);
+                --carousel-arrow-icon-dark: var(--md-sys-color-on-background);
+            }
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--md-sys-color-background);
+            color: var(--md-sys-color-on-background);
+            margin: 0; /* Asegurar que no haya margen extra del body */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Navbar (simulando la barra del navegador de Chrome) */
+        .navbar {
+            background-color: var(--browser-bar-bg);
+            padding: 10px 15px;
+            box-shadow: var(--browser-shadow);
+            position: sticky; /* Se mantiene en la parte superior */
+            top: 0;
+            z-index: 1000;
+            flex-shrink: 0; /* Para que no se encoja */
+        }
+
+        .navbar-brand {
+            color: var(--browser-text-color);
+            font-weight: 500;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            border-radius: 20px;
+            background-color: var(--browser-search-bg);
+            padding: 5px 15px;
+            flex-grow: 1;
+            margin-right: 15px;
+            text-decoration: none;
+        }
+        .navbar-brand img {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .navbar-toggler {
+            border: none;
+        }
+        /* Ajuste para que el ícono del toggler sea visible en ambos modos */
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23424242' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+        @media (prefers-color-scheme: dark) {
+            .navbar-toggler-icon {
+                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23BDBDBD' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+            }
+        }
+
+        /* Campo de búsqueda en la navbar (el central) */
+        .navbar .form-control {
+            background-color: var(--browser-search-bg);
+            border-radius: 25px;
+            padding: 8px 20px;
+            border: none;
+            color: var(--browser-text-color);
+            box-shadow: none;
+        }
+        .navbar .form-control::placeholder {
+            color: var(--browser-icon-color);
+            opacity: 0.7; /* Más legible */
+        }
+        .navbar .form-control:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--md-sys-color-primary); /* Borde de enfoque azul sutil */
+        }
+        .navbar .btn-outline-light { /* Botón de búsqueda de la navbar */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            color: var(--browser-icon-color);
+        }
+
+        .navbar-nav .nav-link { /* Íconos de la derecha (notificaciones, perfil, settings) */
+            color: var(--browser-icon-color);
+            font-weight: normal;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+        }
+        .navbar-nav .nav-link:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--browser-icon-color);
+        }
+        @media (prefers-color-scheme: dark) {
+             .navbar-nav .nav-link:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+             }
+        }
+        .navbar-nav .nav-link .material-icons {
+             font-size: 24px;
+             vertical-align: middle;
+             margin-right: 0;
+        }
+        .navbar-nav .nav-link.profile-link {
+            padding: 4px 8px;
+        }
+        .navbar-nav .nav-link.profile-link img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 8px;
+        }
+
+        /* Contenedor principal para el layout flex */
+        .app-container {
+            display: flex;
+            flex-grow: 1; /* Permite que ocupe el espacio restante */
+        }
+
+        /* Sidebar (barra lateral izquierda) */
+        .sidebar {
+            background-color: var(--md-sys-color-surface);
+            box-shadow: var(--md-sys-elevation-level1);
+            padding-top: 20px;
+            height: calc(100vh - 70px); /* Ajustar altura para que no quede debajo de la navbar */
+            position: sticky;
+            top: 70px; /* Offset para que no se superponga con la navbar */
+            left: 0;
+            width: 250px;
+            overflow-y: auto;
+            border-radius: 0 28px 28px 0; /* Bordes redondeados en el lado derecho */
+            margin-top: 10px; /* Separación de la navbar */
+            flex-shrink: 0; /* Para que no se encoja cuando el contenido es grande */
+        }
+        .sidebar .fab-container {
+            padding: 0 38% 20px;
+            text-align: center;
+        }
+        .sidebar .fab {
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: var(--md-sys-elevation-level1);
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            border: none;
+            text-decoration: none; /* Eliminar subrayado si es un <a> */
+        }
+        .sidebar .fab:hover {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            box-shadow: var(--md-sys-elevation-level2);
+        }
+        .sidebar .fab .material-icons {
+            font-size: 24px;
+        }
+
+        .sidebar .nav-link {
+            color: var(--md-sys-color-on-surface-variant);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            border-radius: 28px;
+            margin: 8px 16px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            font-weight: 500;
+        }
+        .sidebar .nav-link .material-icons {
+            margin-right: 12px;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+        .sidebar .nav-link.active {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+        }
+        .sidebar .nav-link.active .material-icons {
+            color: var(--md-sys-color-on-primary-container);
+        }
+        .sidebar .nav-link:hover:not(.active) {
+            background-color: rgba(var(--md-sys-color-primary-rgb), 0.08); /* Ligero hover */
+            color: var(--md-sys-color-on-surface);
+        }
+        .sidebar .nav-link:hover:not(.active) .material-icons {
+            color: var(--md-sys-color-on-surface);
+        }
+        .sidebar .sidebar-heading {
+            color: var(--md-sys-color-on-surface-variant);
+            font-weight: 600;
+            padding: 10px 20px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        .sidebar .divider {
+            height: 1px;
+            background-color: var(--md-sys-color-outline);
+            margin: 10px 20px;
+            opacity: 0.5;
+        }
+
+        /* Contenido principal */
+        .content {
+            padding: 24px; /* Aumentar el padding */
+            flex-grow: 1; /* Para que el contenido ocupe el espacio restante */
+            min-width: 0; /* Permite que el contenido se encoja correctamente */
+        }
+
+        .card {
+            background-color: var(--md-sys-color-surface);
+            color: var(--md-sys-color-on-surface);
+            border: none;
+            border-radius: 12px;
+            box-shadow: var(--md-sys-elevation-level1);
+        }
+
+        .card .card-title {
+            color: var(--md-sys-color-on-surface);
+            font-weight: 600;
+        }
+
+        .btn {
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--md-sys-color-primary);
+            border-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+        }
+        .btn-primary:hover {
+            background-color: var(--md-sys-color-primary-container);
+            border-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            box-shadow: var(--md-sys-elevation-level1);
+        }
+
+        .btn-outline-primary {
+            color: var(--md-sys-color-primary);
+            border-color: var(--md-sys-color-outline);
+            background-color: transparent;
+        }
+        .btn-outline-primary:hover {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            border-color: var(--md-sys-color-primary);
+            box-shadow: var(--md-sys-elevation-level1);
+        }
+
+        .btn-secondary {
+            background-color: var(--md-sys-color-secondary);
+            border-color: var(--md-sys-color-secondary);
+            color: var(--md-sys-color-on-secondary);
+        }
+        .btn-secondary:hover {
+            background-color: var(--md-sys-color-secondary-container);
+            border-color: var(--md-sys-color-secondary-container);
+            color: var(--md-sys-color-on-secondary-container);
+            box-shadow: var(--md-sys-elevation-level1);
+        }
+
+        .btn-outline-secondary {
+            color: var(--md-sys-color-secondary);
+            border-color: var(--md-sys-color-outline);
+            background-color: transparent;
+        }
+        .btn-outline-secondary:hover {
+            background-color: var(--md-sys-color-secondary-container);
+            color: var(--md-sys-color-on-secondary-container);
+            border-color: var(--md-sys-color-secondary);
+            box-shadow: var(--md-sys-elevation-level1);
+        }
+
+        .btn-danger {
+            background-color: var(--md-sys-color-error);
+            border-color: var(--md-sys-color-error);
+            color: var(--md-sys-color-on-error);
+        }
+        .btn-danger:hover {
+            background-color: var(--md-sys-color-error-container);
+            border-color: var(--md-sys-color-error-container);
+            color: var(--md-sys-color-on-error-container);
+            box-shadow: var(--md-sys-elevation-level1);
+        }
+
+        .profile-img { /* Para la imagen de perfil en la navbar o en el perfil grande */
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--md-sys-color-primary-container);
+        }
+        .avatar-small { /* Para las imágenes de perfil pequeñas en la navbar superior derecha */
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Forms */
+        .form-control, .form-select {
+            background-color: var(--md-sys-color-surface-variant);
+            color: var(--md-sys-color-on-surface);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .form-control::placeholder { /* Asegurar color del placeholder en ambos modos */
+            color: var(--md-sys-color-on-surface-variant);
+            opacity: 0.7;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: var(--md-sys-color-surface); /* Fondo blanco al enfocar */
+            box-shadow: 0 0 0 2px var(--md-sys-color-primary);
+            border-color: transparent;
+        }
+        .form-label {
+            color: var(--md-sys-color-on-surface);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        .invalid-feedback {
+            color: var(--md-sys-color-error);
+        }
+
+        .alert {
+            border-radius: 8px;
+            border: 1px solid transparent;
+            font-weight: 500;
+            padding: 1rem 1.25rem;
+        }
+        .alert-success {
+            background-color: var(--md-sys-color-secondary-container);
+            color: var(--md-sys-color-on-secondary-container);
+            border-color: var(--md-sys-color-secondary);
+        }
+        .alert-info {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            border-color: var(--md-sys-color-primary);
+        }
+        .alert-danger {
+            background-color: var(--md-sys-color-error-container);
+            color: var(--md-sys-color-on-error-container);
+            border-color: var(--md-sys-color-error);
+        }
+
+        .section-title {
+            color: var(--md-sys-color-on-background); /* Usar color de texto principal */
+            font-weight: 600;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--md-sys-color-outline);
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .see-more-link {
+            font-size: 1rem;
+            color: var(--md-sys-color-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .see-more-link:hover {
+            text-decoration: underline;
+            color: var(--md-sys-color-on-primary-container); /* Un poco más oscuro en hover */
+        }
+        @media (prefers-color-scheme: dark) {
+            .see-more-link {
+                color: var(--md-sys-color-primary-container);
+            }
+            .see-more-link:hover {
+                color: var(--md-sys-color-primary);
+            }
+        }
+
+        /* Carrusel Styles (re-integrados y ajustados a Material You) */
+        .carousel-item img {
+            object-fit: cover;
+            height: 200px;
+            border-radius: 8px;
+        }
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 40px;
+            height: 40px;
+            background-color: var(--carousel-arrow-bg-light);
+            border-radius: 50%;
+            opacity: 0.8;
+            transition: opacity 0.2s ease, background-color 0.2s ease;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .carousel-control-prev:hover,
+        .carousel-control-next:hover {
+            opacity: 1;
+            background-color: var(--carousel-arrow-hover-bg-light);
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-image: none;
+            font-size: 24px;
+            color: var(--carousel-arrow-icon-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .carousel-control-prev-icon::before {
+            content: 'keyboard_arrow_left';
+            font-family: 'Material Icons';
+        }
+
+        .carousel-control-next-icon::before {
+            content: 'keyboard_arrow_right';
+            font-family: 'Material Icons';
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .carousel-control-prev,
+            .carousel-control-next {
+                background-color: var(--carousel-arrow-bg-dark);
+            }
+            .carousel-control-prev:hover,
+            .carousel-control-next:hover {
+                background-color: var(--carousel-arrow-hover-bg-dark);
+            }
+            .carousel-control-prev-icon,
+            .carousel-control-next-icon {
+                color: var(--carousel-arrow-icon-dark);
+            }
+        }
+        /* Fin Carrusel Styles */
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .navbar {
+                 padding: 10px 0; /* Ajuste para el padding en móvil */
+                 box-shadow: none; /* Eliminar sombra en móvil si no es necesario */
+            }
+            .navbar .container-fluid {
+                flex-wrap: wrap;
+            }
+            .navbar-brand {
+                flex-basis: 100%;
+                margin-bottom: 10px;
+                order: 0;
+            }
+            .navbar-collapse {
+                width: 100%;
+                order: 3;
+                background-color: var(--browser-bar-bg);
+                padding-bottom: 10px;
+            }
+            .navbar-nav {
+                flex-direction: row !important;
+                width: 100%;
+                justify-content: space-around;
+                padding: 10px 0;
+                border-top: 1px solid var(--md-sys-color-outline); /* Línea divisoria suave */
+            }
+            .navbar-nav .nav-item {
+                border-bottom: none;
+                padding: 0;
+            }
+            .navbar-nav .nav-link {
+                padding: 8px;
+            }
+            .navbar .d-flex {
+                order: 2;
+                flex-grow: 1;
+                margin-top: 5px; /* Espacio entre brand y search */
+            }
+
+            .app-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto; /* Altura automática en móvil */
+                position: relative;
+                box-shadow: var(--md-sys-elevation-level1);
+                border-radius: 0; /* Sin redondez en móvil */
+                margin-top: 0;
+                top: 0;
+                padding-bottom: 15px; /* Padding inferior para el FAB */
+            }
+            .sidebar .nav-link {
+                margin: 4px 8px;
+            }
+            .sidebar .fab-container {
+                display: flex;
+                justify-content: center;
+                padding-top: 15px; /* Espacio superior para el FAB */
+            }
+
+            .content {
+                margin-left: 0;
+                padding-top: 15px; /* Ajuste para que el contenido no quede pegado a la sidebar móvil */
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+
+</head>
+<body>
+    {# Top Navbar (simulando la barra de un naveador) #}
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            {# Nombre de la pagina #}
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'images/book_pile.jpg' %}" alt="BadReads" class="avatar-small">
+                Badreads
+            </a>
+
+            {# Botón de la barra de navegación para móviles #}
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            {# Campo de búsqueda central en la barra superior #}
+            <div class="d-flex w-100 w-lg-auto order-lg-1 my-2 my-lg-0">
+                <form class="d-flex flex-grow-1" action="{% url 'search_results' %}" method="get">
+                    <input class="form-control me-2" type="search" placeholder="{% trans 'Search for books, users...' %}" aria-label="Search" name="q">
+                    <button class="btn btn-outline-light" type="submit">
+                        <span class="material-icons">search</span>
+                    </button>
+                </form>
+            </div>
+            {% if user.is_authenticated %}
+            {# Íconos de notificación, configuración y perfil a la derecha #}
+            <div class="collapse navbar-collapse order-lg-2" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                    <li class="nav-item">
+                        {% comment %} <a class="nav-link position-relative" href="{% url 'notifications' %}">
+                            <span class="material-icons">notifications</span>
+                            {# Opcional: Contador de notificaciones. Asegúrate de que tu contexto envíe 'unread_notifications_count' #}
+                            {% comment %}
+                            {% if unread_notifications_count %}
+                                <span class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">{{ unread_notifications_count }}</span>
+                            {% endif %}
+                             <span class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">3</span> {# Hardcoded for demo, replace with actual count #}
+                        </a> {% endcomment %}
+                        <a href="{% url 'notifications' %}" class="nav-link position-relative">
+                            <i class="material-icons">notifications</i> {# Or your bell icon #}
+                            {% if unread_notifications_count > 0 %}
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    {{ unread_notifications_count }}
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                            {% endif %}
+                        </a>
+
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'settings' %}">
+                            <span class="material-icons">settings</span>
+                        </a>
+                    </li>
+                    
+                        <li class="nav-item">
+                            {# Usa la imagen de perfil del usuario si existe, de lo contrario el placeholder #}
+                            <a class="nav-link profile-link" href="{% url 'user_profile' user.pk %}">
+                                <img src="{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}{% static 'images/default_profile.png' %}{% endif %}" alt="{{ user.display_name|default:user.username }}" class="avatar-small">
+                            </a>
+                        </li>
+                        <li class="nav-item d-lg-none"> {# Logout solo en la barra lateral en desktop, aquí en móvil si está autenticado #}
+                             <a class="nav-link text-danger" href="{% url 'logout' %}">
+                                 <span class="material-icons me-2">logout</span> {% trans "Logout" %}
+                             </a>
+                        </li>
+                    {% else %}
+                        {# No mostrar estos en la navbar principal en móvil si no hay autenticación, ya que la sidebar siempre tiene Login/Signup #}
+                        {# Si quieres que aparezcan, quita el d-lg-none de arriba y descomenta abajo #}
+                        {% comment %} {#
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">{% trans "Login" %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'signup' %}">{% trans "Sign Up" %}</a>
+                        </li>
+                        #} {% endcomment %}
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {# Contenedor principal de la aplicación: Sidebar + Contenido #}
+    <div class="app-container">
+        {# Sidebar (columna de navegación lateral) #}
+        <div class="sidebar d-none d-md-block"> {# Oculta en pantallas pequeñas, visible en md y lg #}
+            {% if user.is_authenticated %}
+            <div class="fab-container">
+                {# Botón de Acción Flotante (FAB) #}
+                <a href="{% url 'add_book_or_review' %}" class="fab">
+                    <span class="material-icons">add</span>
+                </a>
+            </div>
+            {%endif%}
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">
+                        <span class="material-icons">home</span> {% trans "Home" %}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'all_books' %}active{% endif %}" href="{% url 'all_books' %}">
+                        <span class="material-icons">library_books</span> {% trans "All Books" %}
+                    </a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'popular_reviews' %}active{% endif %}" href="{% url 'popular_reviews' %}">
+                            <span class="material-icons">rate_review</span> {% trans "Popular Reviews" %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'my_list' %}active{% endif %}" href="{% url 'my_list' user.pk %}">
+                            <span class="material-icons">menu_book</span> {% trans "My Reading List" %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'friends' or request.resolver_match.url_name == 'friends_search' %}active{% endif %}" href="{% url 'friends' user.pk %}">
+                            <span class="material-icons">group</span> {% trans "Friends" %}
+                        </a>
+                    </li>
+                
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'chat_list' or request.resolver_match.url_name == 'chat_detail' %}active{% endif %}" href="{% url 'chat_list' %}">
+                            <span class="material-icons">chat</span> {% trans "Chat" %}
+                        </a>
+                    </li>
+                    <div class="sidebar-heading">{% trans "Your Account" %}</div>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'user_profile' %}active{% endif %}" href="{% url 'user_profile' user.pk %}">
+                            <span class="material-icons">person</span> {% trans "Profile" %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'settings' %}active{% endif %}" href="{% url 'settings' %}">
+                            <span class="material-icons">settings</span> {% trans "Settings" %}
+                        </a>
+                    </li>
+                    <div class="divider"></div>
+                    <li class="nav-item">
+                         <a href="{% url 'logout' %}" class="nav-link text-danger">
+                             <span class="material-icons me-2">logout</span> {% trans "Logout" %}
+                         </a>
+                    </li>
+                {% else %}
+                    <div class="sidebar-heading">{% trans "Account" %}</div>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}" href="{% url 'login' %}">
+                            <span class="material-icons">login</span> {% trans "Login" %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'signup' %}active{% endif %}" href="{% url 'signup' %}">
+                            <span class="material-icons">person_add</span> {% trans "Sign Up" %}
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+
+        {# Columna de Contenido Principal #}
+        <main class="content"> 
+            <div class="container-fluid">
+                {% block content %}
+                {# Contenido específico de cada página irá aquí #}
+                {% endblock content %}
+            </div>
+        </main>
+    </div>
+
+    {# Script de Bootstrap #}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    {# Bloque para JavaScript adicional específico de la página #}
+    {% block extra_js %}{% endblock %}
+
+</body>
+</html>

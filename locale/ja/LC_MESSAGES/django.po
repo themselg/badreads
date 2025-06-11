@@ -8,77 +8,1571 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-14 10:54-0600\n"
+"POT-Creation-Date: 2025-06-10 20:22-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: main_app/templates/main_app/home.html:7
-#: main_app/templates/main_app/home.html:14
-msgid "Home Page"
-msgstr "ホームページ"
+#: main_app/templates/main_app/add_book.html:6
+#: main_app/templates/main_app/add_book.html:88
+#: main_app/templates/main_app/add_book_or_review.html:14
+msgid "Add New Book"
+msgstr "新しい本を追加"
 
-#: main_app/templates/main_app/home.html:18
-msgid "Logout"
-msgstr "ログアウト"
+#: main_app/templates/main_app/add_book.html:106
+msgid "Add with ISBN"
+msgstr "ISBNで追加"
 
-#: main_app/templates/main_app/home.html:21
-#: main_app/templates/main_app/login.html:6
-#: main_app/templates/main_app/login.html:14
-#: main_app/templates/main_app/login.html:34
-msgid "Login"
-msgstr "ログイン"
+#: main_app/templates/main_app/add_book.html:107
+msgid "Quickly add a book using its ISBN and pre-fill details."
+msgstr "ISBNを使用して本を素早く追加し、詳細を事前に入力します。"
 
-#: main_app/templates/main_app/home.html:22
-#: main_app/templates/main_app/signup.html:7
-#: main_app/templates/main_app/signup.html:15
-#: main_app/templates/main_app/signup.html:33
-msgid "Sign Up"
-msgstr "サインアップ"
+#: main_app/templates/main_app/add_book.html:108
+msgid "Use ISBN"
+msgstr "ISBNを使用"
 
-#: main_app/templates/main_app/home.html:31
+#: main_app/templates/main_app/add_book.html:114
+msgid "Add with Camera Scan (OCR)"
+msgstr "カメラでスキャンして追加 (OCR)"
+
+#: main_app/templates/main_app/add_book.html:115
+msgid "Scan the ISBN from an image using your camera."
+msgstr "カメラを使用して画像からISBNをスキャンします。"
+
+#: main_app/templates/main_app/add_book.html:117
+msgid "Use Camera Scan"
+msgstr "カメラでスキャン"
+
+#: main_app/templates/main_app/add_book.html:124
+msgid "Add Manually"
+msgstr "手動で追加"
+
+#: main_app/templates/main_app/add_book.html:148
+#: main_app/templates/main_app/add_book_by_isbn.html:117
+msgid "ISBN"
+msgstr "ISBN"
+
+#: main_app/templates/main_app/add_book.html:173
+#: main_app/templates/main_app/add_book_by_isbn.html:150
+#: main_app/templates/main_app/edit_book.html:147 main_app/views.py:759
+msgid "Authors"
+msgstr "著者"
+
+#: main_app/templates/main_app/add_book.html:185
+#: main_app/templates/main_app/add_book.html:269
+#: main_app/templates/main_app/add_book_by_isbn.html:162
+#: main_app/templates/main_app/add_book_by_isbn.html:245
+#: main_app/templates/main_app/book_detail.html:52
+#: main_app/templates/main_app/edit_book.html:159
+#: main_app/templates/main_app/edit_book.html:242 main_app/views.py:762
+msgid "Editorial"
+msgstr "出版社"
+
+#: main_app/templates/main_app/add_book.html:196
+#: main_app/templates/main_app/add_book.html:269
+#: main_app/templates/main_app/add_book_by_isbn.html:173
+#: main_app/templates/main_app/add_book_by_isbn.html:245
+#: main_app/templates/main_app/book_detail.html:53
+#: main_app/templates/main_app/edit_book.html:170
+#: main_app/templates/main_app/edit_book.html:242 main_app/views.py:763
 msgid "Language"
 msgstr "言語"
 
-#: main_app/templates/main_app/home.html:42
+#: main_app/templates/main_app/add_book.html:207
+#: main_app/templates/main_app/add_book.html:270
+#: main_app/templates/main_app/add_book_by_isbn.html:184
+#: main_app/templates/main_app/add_book_by_isbn.html:246
+#: main_app/templates/main_app/book_detail.html:57
+#: main_app/templates/main_app/edit_book.html:181
+#: main_app/templates/main_app/edit_book.html:243 main_app/views.py:760
+msgid "Genres"
+msgstr "ジャンル"
+
+#: main_app/templates/main_app/add_book.html:219
+#: main_app/templates/main_app/add_book.html:271
+#: main_app/templates/main_app/add_book_by_isbn.html:196
+#: main_app/templates/main_app/add_book_by_isbn.html:247
+#: main_app/templates/main_app/book_detail.html:58
+#: main_app/templates/main_app/edit_book.html:193
+#: main_app/templates/main_app/edit_book.html:244 main_app/views.py:761
+msgid "Formats"
+msgstr "形式"
+
+#: main_app/templates/main_app/add_book.html:238
+#: main_app/templates/main_app/add_book.html:264
+#: main_app/templates/main_app/add_book_by_isbn.html:215
+#: main_app/templates/main_app/add_book_by_isbn.html:240
+#: main_app/templates/main_app/add_review_for_book.html:26
+#: main_app/templates/main_app/book_detail.html:14
+#: main_app/templates/main_app/edit_book.html:211
+#: main_app/templates/main_app/edit_book.html:237
+msgid "Book Cover"
+msgstr "本の表紙"
+
+#: main_app/templates/main_app/add_book.html:241
+#: main_app/templates/main_app/add_book_by_isbn.html:218
+#: main_app/templates/main_app/edit_book.html:214
+msgid "Drag & drop an image or click to upload"
+msgstr "画像をドラッグ＆ドロップまたはクリックしてアップロード"
+
+#: main_app/templates/main_app/add_book.html:246
+#: main_app/templates/main_app/add_book_by_isbn.html:222
+#: main_app/templates/main_app/edit_book.html:219
+msgid "Cover Preview"
+msgstr "表紙プレビュー"
+
+#: main_app/templates/main_app/add_book.html:250
+msgid "Preview Book"
+msgstr "本をプレビュー"
+
+#: main_app/templates/main_app/add_book.html:251
+#: main_app/templates/main_app/add_book_by_isbn.html:227
+msgid "Save Book"
+msgstr "本を保存"
+
+#: main_app/templates/main_app/add_book.html:260
+#: main_app/templates/main_app/add_book_by_isbn.html:236
+#: main_app/templates/main_app/edit_book.html:233
+msgid "Book Preview"
+msgstr "本のプレビュー"
+
+#: main_app/templates/main_app/add_book.html:261
+#: main_app/templates/main_app/add_book_by_isbn.html:237
+#: main_app/templates/main_app/edit_book.html:234
+msgid "Close"
+msgstr "閉じる"
+
+#: main_app/templates/main_app/add_book.html:267
+#: main_app/templates/main_app/add_book_by_isbn.html:243
+#: main_app/templates/main_app/book_detail.html:55
+#: main_app/templates/main_app/edit_book.html:240
+msgid "Release Date"
+msgstr "発売日"
+
+#: main_app/templates/main_app/add_book.html:268
+#: main_app/templates/main_app/add_book_by_isbn.html:244
+#: main_app/templates/main_app/book_detail.html:56
+#: main_app/templates/main_app/edit_book.html:241
+msgid "Edition Number"
+msgstr "版数"
+
+#: main_app/templates/main_app/add_book.html:274
+#: main_app/templates/main_app/add_book_by_isbn.html:250
+#: main_app/templates/main_app/edit_book.html:247
+msgid "Edit"
+msgstr "編集"
+
+#: main_app/templates/main_app/add_book.html:275
+#: main_app/templates/main_app/add_book_by_isbn.html:251
+#: main_app/templates/main_app/edit_book.html:248
+msgid "Confirm & Save"
+msgstr "確認して保存"
+
+#: main_app/templates/main_app/add_book.html:660
+#: main_app/templates/main_app/add_book_by_isbn.html:767
+#: main_app/templates/main_app/edit_book.html:672
+msgid "No Title"
+msgstr "タイトルなし"
+
+#: main_app/templates/main_app/add_book.html:661
+#: main_app/templates/main_app/add_book_by_isbn.html:768
+#: main_app/templates/main_app/edit_book.html:673
+msgid "No Author"
+msgstr "著者なし"
+
+#: main_app/templates/main_app/add_book.html:662
+#: main_app/templates/main_app/add_book.html:663
+#: main_app/templates/main_app/add_book.html:664
+#: main_app/templates/main_app/add_book.html:665
+#: main_app/templates/main_app/add_book.html:666
+#: main_app/templates/main_app/add_book.html:667
+#: main_app/templates/main_app/add_book.html:668
+#: main_app/templates/main_app/add_book_by_isbn.html:769
+#: main_app/templates/main_app/add_book_by_isbn.html:770
+#: main_app/templates/main_app/add_book_by_isbn.html:771
+#: main_app/templates/main_app/add_book_by_isbn.html:772
+#: main_app/templates/main_app/add_book_by_isbn.html:773
+#: main_app/templates/main_app/add_book_by_isbn.html:774
+#: main_app/templates/main_app/add_book_by_isbn.html:775
+#: main_app/templates/main_app/book_detail.html:51
+#: main_app/templates/main_app/book_detail.html:52
+#: main_app/templates/main_app/book_detail.html:53
+#: main_app/templates/main_app/book_detail.html:54
+#: main_app/templates/main_app/book_detail.html:55
+#: main_app/templates/main_app/book_detail.html:56
+#: main_app/templates/main_app/book_detail.html:57
+#: main_app/templates/main_app/book_detail.html:58
+#: main_app/templates/main_app/edit_book.html:674
+#: main_app/templates/main_app/edit_book.html:675
+#: main_app/templates/main_app/edit_book.html:676
+#: main_app/templates/main_app/edit_book.html:677
+#: main_app/templates/main_app/edit_book.html:678
+#: main_app/templates/main_app/edit_book.html:679
+#: main_app/templates/main_app/edit_book.html:680
+msgid "N/A"
+msgstr "N/A"
+
+#: main_app/templates/main_app/add_book_by_isbn.html:6
+#: main_app/templates/main_app/add_book_by_isbn.html:88
+msgid "Add Book by ISBN"
+msgstr "ISBNで本を追加"
+
+#: main_app/templates/main_app/add_book_by_isbn.html:103
+msgid "Enter ISBN"
+msgstr "ISBNを入力"
+
+#: main_app/templates/main_app/add_book_by_isbn.html:120
+msgid "Search ISBN"
+msgstr "ISBNを検索"
+
+#: main_app/templates/main_app/add_book_by_isbn.html:226
+#: main_app/templates/main_app/add_book_or_review.html:16
+msgid "Add Book"
+msgstr "本を追加"
+
+#: main_app/templates/main_app/add_book_by_ocr.html:6
+#: main_app/templates/main_app/add_book_by_ocr.html:78
+msgid "Scan ISBN with Camera"
+msgstr "カメラでISBNをスキャン"
+
+#: main_app/templates/main_app/add_book_by_ocr.html:96
+msgid "Loading..."
+msgstr "読み込み中..."
+
+#: main_app/templates/main_app/add_book_by_ocr.html:98
+msgid "Scanning ISBN..."
+msgstr "ISBNスキャン中..."
+
+#: main_app/templates/main_app/add_book_by_ocr.html:103
+#: main_app/templates/main_app/add_review_for_book.html:44
+#: main_app/templates/main_app/edit_profile.html:86
+#: main_app/templates/main_app/settings.html:280
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: main_app/templates/main_app/add_book_by_ocr.html:104
+msgid "Take Photo & Scan"
+msgstr "写真を撮ってスキャン"
+
+#: main_app/templates/main_app/add_book_by_ocr.html:195
+msgid "Align ISBN here"
+msgstr "ここにISBNを合わせる"
+
+#: main_app/templates/main_app/add_book_by_ocr.html:234
+msgid "Camera not active. Please ensure camera access and try again."
+msgstr "カメラが有効ではありません。カメラへのアクセスを許可してもう一度お試しください。"
+
+#: main_app/templates/main_app/add_book_by_ocr.html:280
+msgid "Failed to process image."
+msgstr "画像の処理に失敗しました。"
+
+#: main_app/templates/main_app/add_book_by_ocr.html:285
+msgid "ISBN scanned successfully!"
+msgstr "ISBNのスキャンに成功しました！"
+
+#: main_app/templates/main_app/add_book_by_ocr.html:289
+msgid "No ISBN found in the scanned image. Please try again."
+msgstr "スキャンした画像にISBNが見つかりませんでした。もう一度お試しください。"
+
+#: main_app/templates/main_app/add_book_by_ocr.html:293
+msgid "Error during ISBN scan:"
+msgstr "ISBNスキャン中のエラー："
+
+#: main_app/templates/main_app/add_book_or_review.html:5
+msgid "Add Book or Review"
+msgstr "本またはレビューを追加"
+
+#: main_app/templates/main_app/add_book_or_review.html:8
+msgid "What would you like to add?"
+msgstr "何を追加しますか？"
+
+#: main_app/templates/main_app/add_book_or_review.html:15
+msgid "If a book is not yet in our system, add it here."
+msgstr "まだシステムにない本は、ここから追加してください。"
+
+#: main_app/templates/main_app/add_book_or_review.html:22
+msgid "Review a Book"
+msgstr "本をレビュー"
+
+#: main_app/templates/main_app/add_book_or_review.html:23 main_app/views.py:923
+msgid "Write a review for a book you have already read."
+msgstr "すでに読んだ本のレビューを書いてください。"
+
+#: main_app/templates/main_app/add_book_or_review.html:24
+#: main_app/templates/main_app/add_review.html:6
+#: main_app/templates/main_app/all_books_list.html:60
+msgid "Add Review"
+msgstr "レビューを追加"
+
+#: main_app/templates/main_app/add_review.html:9
+msgid "Add Review for a Book"
+msgstr "本のレビューを追加"
+
+#: main_app/templates/main_app/add_review.html:29
+msgid "Search for a book"
+msgstr "本を検索"
+
+#: main_app/templates/main_app/add_review.html:30
+msgid "Search by title or ISBN..."
+msgstr "タイトルまたはISBNで検索..."
+
+#: main_app/templates/main_app/add_review.html:31
+msgid "Start typing to find a book you've read."
+msgstr "読んだ本を見つけるために、入力を開始してください。"
+
+#: main_app/templates/main_app/add_review.html:39
+msgid "Reviewing"
+msgstr "レビュー中"
+
+#: main_app/templates/main_app/add_review.html:39
+msgid "None selected"
+msgstr "選択されていません"
+
+#: main_app/templates/main_app/add_review.html:43
+#: main_app/templates/main_app/add_review_for_book.html:34
+msgid "Your Review"
+msgstr "あなたのレビュー"
+
+#: main_app/templates/main_app/add_review.html:44
+msgid "Write your thoughts about the book..."
+msgstr "本についてあなたの考えを書いてください..."
+
+#: main_app/templates/main_app/add_review.html:48
+#: main_app/templates/main_app/add_review_for_book.html:39
+msgid "Rating (0-5)"
+msgstr "評価 (0-5)"
+
+#: main_app/templates/main_app/add_review.html:52
+#: main_app/templates/main_app/add_review_for_book.html:43
+msgid "Submit Review"
+msgstr "レビューを送信"
+
+#: main_app/templates/main_app/add_review.html:95
+msgid "No books found."
+msgstr "本が見つかりませんでした。"
+
+#: main_app/templates/main_app/add_review_for_book.html:6
+#: main_app/templates/main_app/add_review_for_book.html:9
+msgid "Add Review for"
+msgstr "のレビューを追加"
+
+#: main_app/templates/main_app/add_review_for_book.html:29
+#: main_app/templates/main_app/all_books_list.html:38
+#: main_app/templates/main_app/home.html:69
+#: main_app/templates/main_app/home.html:139
+#: main_app/templates/main_app/my_list.html:41
+#: main_app/templates/main_app/search_results.html:26
+msgid "Unknown Author"
+msgstr "不明な著者"
+
+#: main_app/templates/main_app/add_review_for_book.html:35
+msgid "Share your thoughts about this book..."
+msgstr "この本についてあなたの考えを共有してください..."
+
+#: main_app/templates/main_app/all_books_list.html:13
+msgid "Sort by"
+msgstr "並べ替え"
+
+#: main_app/templates/main_app/all_books_list.html:15
+msgid "Title (A-Z)"
+msgstr "タイトル (A-Z)"
+
+#: main_app/templates/main_app/all_books_list.html:16
+msgid "Title (Z-A)"
+msgstr "タイトル (Z-A)"
+
+#: main_app/templates/main_app/all_books_list.html:42
+#: main_app/templates/main_app/book_detail.html:50
+#: main_app/templates/main_app/home.html:72
+#: main_app/templates/main_app/home.html:142
+#: main_app/templates/main_app/my_list.html:46
+#: main_app/templates/main_app/search_results.html:29
+msgid "Details"
+msgstr "詳細"
+
+#: main_app/templates/main_app/all_books_list.html:50
+#: main_app/templates/main_app/all_books_list.html:52
+#: main_app/templates/main_app/book_detail.html:38
+msgid "Want to Read"
+msgstr "読みたい"
+
+#: main_app/templates/main_app/all_books_list.html:65
+msgid "Edit Review"
+msgstr "レビューを編集"
+
+#: main_app/templates/main_app/all_books_list.html:76
+msgid "No books found in this section."
+msgstr "このセクションに本は見つかりませんでした。"
+
+#: main_app/templates/main_app/base.html:9
+msgid "BadReads"
+msgstr "BadReads"
+
+#: main_app/templates/main_app/base.html:669
+msgid "Search for books, users..."
+msgstr "本、ユーザーを検索..."
+
+#: main_app/templates/main_app/base.html:715
+#: main_app/templates/main_app/base.html:795
+msgid "Logout"
+msgstr "ログアウト"
+
+#: main_app/templates/main_app/base.html:751
+#, fuzzy
+#| msgid "Home Page"
+msgid "Home"
+msgstr "ホーム"
+
+#: main_app/templates/main_app/base.html:756 main_app/views.py:1202
+msgid "All Books"
+msgstr "すべての本"
+
+#: main_app/templates/main_app/base.html:762
+#: main_app/templates/main_app/reviews.html:6
+msgid "Popular Reviews"
+msgstr "人気のレビュー"
+
+#: main_app/templates/main_app/base.html:767
+#: main_app/templates/main_app/my_list.html:6
+#: main_app/templates/main_app/my_list.html:9
+msgid "My Reading List"
+msgstr "私の読書リスト"
+
+#: main_app/templates/main_app/base.html:772
+#: main_app/templates/main_app/friends.html:6
+msgid "Friends"
+msgstr "友達"
+
+#: main_app/templates/main_app/base.html:778
+#: main_app/templates/main_app/friends.html:64
+#: main_app/templates/main_app/profile.html:47
+msgid "Chat"
+msgstr "チャット"
+
+#: main_app/templates/main_app/base.html:781
+msgid "Your Account"
+msgstr "あなたのアカウント"
+
+#: main_app/templates/main_app/base.html:784
+#: main_app/templates/main_app/profile.html:6
+#: main_app/templates/main_app/profile.html:9
+msgid "Profile"
+msgstr "プロフィール"
+
+#: main_app/templates/main_app/base.html:789
+#: main_app/templates/main_app/settings.html:6
+#: main_app/templates/main_app/settings.html:9
+msgid "Settings"
+msgstr "設定"
+
+#: main_app/templates/main_app/base.html:799
+msgid "Account"
+msgstr "アカウント"
+
+#: main_app/templates/main_app/base.html:802
+#: main_app/templates/main_app/login.html:5
+#: main_app/templates/main_app/login.html:12
+#: main_app/templates/main_app/login.html:47
+msgid "Login"
+msgstr "ログイン"
+
+#: main_app/templates/main_app/base.html:807
+#: main_app/templates/main_app/signup.html:5
+#: main_app/templates/main_app/signup.html:12
+#: main_app/templates/main_app/signup.html:47
+msgid "Sign Up"
+msgstr "サインアップ"
+
+#: main_app/templates/main_app/book_detail.html:20
+msgid ""
+"Are you sure you want to delete this book? This action cannot be undone."
+msgstr "この本を削除してもよろしいですか？この操作は元に戻せません。"
+
+#: main_app/templates/main_app/book_detail.html:22
+msgid "Delete Book (Admin Only)"
+msgstr "本を削除 (管理者のみ)"
+
+#: main_app/templates/main_app/book_detail.html:28
+msgid "Read This Book"
+msgstr "この本を読む"
+
+#: main_app/templates/main_app/book_detail.html:30
+#: main_app/templates/main_app/my_list.html:19
+msgid "Already Read"
+msgstr "読了済み"
+
+#: main_app/templates/main_app/book_detail.html:32
+msgid "Edit My Review"
+msgstr "私のレビューを編集"
+
+#: main_app/templates/main_app/book_detail.html:40
+msgid "In Reading List"
+msgstr "読書リスト内"
+
+#: main_app/templates/main_app/book_detail.html:45
+#: main_app/templates/main_app/edit_book.html:102
+msgid "Edit Book Details"
+msgstr "本の詳細を編集"
+
+#: main_app/templates/main_app/book_detail.html:51
+msgid "Author"
+msgstr "著者"
+
+#: main_app/templates/main_app/book_detail.html:60
+msgid "Original Book"
+msgstr "元の本"
+
+#: main_app/templates/main_app/book_detail.html:64
+msgid "Last modified by"
+msgstr "最終更新者"
+
+#: main_app/templates/main_app/book_detail.html:65
+#: main_app/templates/main_app/book_detail.html:85
+#: main_app/templates/main_app/book_detail.html:114
+#: main_app/templates/main_app/book_detail.html:160
+#: main_app/templates/main_app/my_list.html:83
+#: main_app/templates/main_app/profile.html:94
+#: main_app/templates/main_app/reviews.html:35
+msgid "on"
+msgstr "に"
+
+#: main_app/templates/main_app/book_detail.html:74
+msgid "Friends Who Read This Book"
+msgstr "この本を読んだ友達"
+
+#: main_app/templates/main_app/book_detail.html:85
+msgid "Rated"
+msgstr "評価済み"
+
+#: main_app/templates/main_app/book_detail.html:88
+#: main_app/templates/main_app/friends_search_results.html:22
+#: main_app/templates/main_app/search_results.html:54
+msgid "View Profile"
+msgstr "プロフィールを見る"
+
+#: main_app/templates/main_app/book_detail.html:95
+msgid "No friends have read this book yet."
+msgstr "この本を読んだ友達はまだいません。"
+
+#: main_app/templates/main_app/book_detail.html:103
+msgid "Most Popular Reviews"
+msgstr "最も人気のレビュー"
+
+#: main_app/templates/main_app/book_detail.html:118
+#: main_app/templates/main_app/my_list.html:88
+#: main_app/templates/main_app/profile.html:99
+#: main_app/templates/main_app/reviews.html:40
+msgid "Rating"
+msgstr "評価"
+
+#: main_app/templates/main_app/book_detail.html:126
+#: main_app/templates/main_app/my_list.html:97
+#: main_app/templates/main_app/profile.html:107
+#: main_app/templates/main_app/reviews.html:49
+msgid "Likes"
+msgstr "いいね"
+
+#: main_app/templates/main_app/book_detail.html:129
+#: main_app/templates/main_app/my_list.html:101
+#: main_app/templates/main_app/profile.html:110
+#: main_app/templates/main_app/reviews.html:53
+msgid "View Book"
+msgstr "本を見る"
+
+#: main_app/templates/main_app/book_detail.html:134
+#: main_app/templates/main_app/my_list.html:106
+#: main_app/templates/main_app/profile.html:114
+#: main_app/templates/main_app/reviews.html:58
+msgid "Are you sure you want to delete this review?"
+msgstr "このレビューを削除してもよろしいですか？"
+
+#: main_app/templates/main_app/book_detail.html:135
+#: main_app/templates/main_app/my_list.html:107
+#: main_app/templates/main_app/profile.html:115
+#: main_app/templates/main_app/reviews.html:59
+msgid "Delete"
+msgstr "削除"
+
+#: main_app/templates/main_app/book_detail.html:145
+msgid "No reviews for this book yet."
+msgstr "この本にはまだレビューがありません。"
+
+#: main_app/templates/main_app/book_detail.html:146
+msgid "Write a Review"
+msgstr "レビューを書く"
+
+#: main_app/templates/main_app/book_detail.html:152
+msgid "Edit History"
+msgstr "編集履歴"
+
+#: main_app/templates/main_app/book_detail.html:159
+msgid "Edited by"
+msgstr "編集者"
+
+#: main_app/templates/main_app/book_detail.html:159
+msgid "Unknown"
+msgstr "不明"
+
+#: main_app/templates/main_app/book_detail.html:169
+msgid "No edit history available for this book yet."
+msgstr "この本の編集履歴はまだありません。"
+
+#: main_app/templates/main_app/chat_list.html:6
+#: main_app/templates/main_app/chat_list.html:9
+msgid "My Chats"
+msgstr "マイチャット"
+
+#: main_app/templates/main_app/chat_list.html:35
+msgid "No messages yet."
+msgstr "まだメッセージはありません。"
+
+#: main_app/templates/main_app/chat_list.html:47
+msgid "You don't have any active chats yet."
+msgstr "まだアクティブなチャットはありません。"
+
+#: main_app/templates/main_app/chat_list.html:48
+msgid "Start by following people. If they follow you back, you can chat!"
+msgstr "人をフォローすることから始めましょう。相手もフォローしてくれたら、チャットできます！"
+
+#: main_app/templates/main_app/chat_list.html:49
+msgid "Find Friends"
+msgstr "友達を探す"
+
+#: main_app/templates/main_app/chat_room.html:6
+#: main_app/templates/main_app/chat_room.html:9
+msgid "Chat with"
+msgstr "とチャット"
+
+#: main_app/templates/main_app/chat_room.html:31
+msgid "You"
+msgstr "あなた"
+
+#: main_app/templates/main_app/chat_room.html:35
+msgid "Start your conversation!"
+msgstr "会話を開始しましょう！"
+
+#: main_app/templates/main_app/contact_support.html:5
+#: main_app/templates/main_app/contact_support.html:8
+#: main_app/templates/main_app/help_center.html:56
+#: main_app/templates/main_app/settings.html:250
+msgid "Contact Support"
+msgstr "サポートに連絡"
+
+#: main_app/templates/main_app/contact_support.html:11
+msgid "Have a question or need assistance? Send us a message!"
+msgstr "ご質問やサポートが必要ですか？メッセージをお送りください！"
+
+#: main_app/templates/main_app/contact_support.html:12
+msgid "Our support team will get back to you as soon as possible."
+msgstr "当社のサポートチームが、できるだけ早くご連絡いたします。"
+
+#: main_app/templates/main_app/contact_support.html:18
+msgid "Your Name"
+msgstr "あなたの名前"
+
+#: main_app/templates/main_app/contact_support.html:22
+msgid "Your Email"
+msgstr "あなたのメールアドレス"
+
+#: main_app/templates/main_app/contact_support.html:26
+msgid "Subject"
+msgstr "件名"
+
+#: main_app/templates/main_app/contact_support.html:30
+msgid "Your Message"
+msgstr "あなたのメッセージ"
+
+#: main_app/templates/main_app/contact_support.html:33
+msgid "Send Message"
+msgstr "メッセージを送信"
+
+#: main_app/templates/main_app/contact_support.html:36
+msgid "You can also reach us at support@badreads.com"
+msgstr "support@badreads.com までご連絡いただくことも可能です。"
+
+#: main_app/templates/main_app/edit_book.html:6
+#: main_app/templates/main_app/edit_book.html:88
+msgid "Edit Book"
+msgstr "本を編集"
+
+#: main_app/templates/main_app/edit_book.html:223
+msgid "Preview Changes"
+msgstr "変更をプレビュー"
+
+#: main_app/templates/main_app/edit_book.html:224
+#: main_app/templates/main_app/edit_profile.html:85
+msgid "Save Changes"
+msgstr "変更を保存"
+
+#: main_app/templates/main_app/edit_profile.html:6
+#: main_app/templates/main_app/edit_profile.html:9
+#: main_app/templates/main_app/profile.html:66
+#: main_app/templates/main_app/settings.html:36
+msgid "Edit Profile"
+msgstr "プロフィールを編集"
+
+#: main_app/templates/main_app/edit_profile.html:29
+msgid "Profile Picture"
+msgstr "プロフィール写真"
+
+#: main_app/templates/main_app/edit_profile.html:38
+msgid "Upload a new profile picture. Max file size: 2.5 MB"
+msgstr "新しいプロフィール写真をアップロードします。最大ファイルサイズ：2.5 MB"
+
+#: main_app/templates/main_app/edit_profile.html:43
+msgid "Remove current picture"
+msgstr "現在の写真を削除"
+
+#: main_app/templates/main_app/edit_profile.html:51
+msgid "Display Name"
+msgstr "表示名"
+
+#: main_app/templates/main_app/edit_profile.html:59
+#: main_app/templates/main_app/profile.html:73
+msgid "About Me"
+msgstr "自己紹介"
+
+#: main_app/templates/main_app/edit_profile.html:67
+msgid "Profile Privacy"
+msgstr "プロフィールのプライバシー"
+
+#: main_app/templates/main_app/edit_profile.html:71
+msgid "Public Profile (visible to everyone)"
+msgstr "公開プロフィール (全員に表示)"
+
+#: main_app/templates/main_app/edit_profile.html:71
+msgid "Private Profile (visible only to mutual friends)"
+msgstr "プライベートプロフィール (相互フォローの友達のみに表示)"
+
+#: main_app/templates/main_app/friends.html:9
+msgid "Friends & Following"
+msgstr "友達とフォロー"
+
+#: main_app/templates/main_app/friends.html:24
+msgid "Find More People"
+msgstr "他の人を探す"
+
+#: main_app/templates/main_app/friends.html:31
+msgid "Mutual Friends"
+msgstr "相互フォローの友達"
+
+#: main_app/templates/main_app/friends.html:36
+#: main_app/templates/main_app/friends.html:142
+#: main_app/templates/main_app/profile.html:42
+msgid "Following"
+msgstr "フォロー中"
+
+#: main_app/templates/main_app/friends.html:41
+msgid "Followers"
+msgstr "フォロワー"
+
+#: main_app/templates/main_app/friends.html:67
+#: main_app/templates/main_app/friends.html:101
+msgid "Unfollow"
+msgstr "フォロー解除"
+
+#: main_app/templates/main_app/friends.html:76
+msgid "You don't have any mutual friends yet."
+msgstr "まだ相互フォローの友達はいません。"
+
+#: main_app/templates/main_app/friends.html:110
+msgid "You are not following anyone yet."
+msgstr "まだ誰もフォローしていません。"
+
+#: main_app/templates/main_app/friends.html:112
+msgid "Find People to Follow"
+msgstr "フォローする人を探す"
+
+#: main_app/templates/main_app/friends.html:142
+msgid "Follow Back"
+msgstr "フォローバック"
+
+#: main_app/templates/main_app/friends.html:152
+msgid "No one is following you yet."
+msgstr "まだ誰もあなたをフォローしていません。"
+
+#: main_app/templates/main_app/friends_search_results.html:6
+msgid "Friend Search Results"
+msgstr "友達検索結果"
+
+#: main_app/templates/main_app/friends_search_results.html:9
+msgid "Friend Search Results for"
+msgstr "の友達検索結果"
+
+#: main_app/templates/main_app/friends_search_results.html:24
+msgid "Add Friend"
+msgstr "友達を追加"
+
+#: main_app/templates/main_app/friends_search_results.html:31
+#: main_app/templates/main_app/search_results.html:61
+msgid "No users found matching your search."
+msgstr "検索に一致するユーザーは見つかりませんでした。"
+
+#: main_app/templates/main_app/help_center.html:5
+#: main_app/templates/main_app/help_center.html:8
+#: main_app/templates/main_app/settings.html:249
+msgid "Help Center"
+msgstr "ヘルプセンター"
+
+#: main_app/templates/main_app/help_center.html:11
+msgid "Welcome to the help center!"
+msgstr "ヘルプセンターへようこそ！"
+
+#: main_app/templates/main_app/help_center.html:12
+msgid "Here you can find answers to common questions about using BadReads."
+msgstr "ここでは、BadReadsの利用に関する一般的な質問への回答を見つけることができます。"
+
+#: main_app/templates/main_app/help_center.html:14
+msgid "Frequently Asked Questions"
+msgstr "よくある質問"
+
+#: main_app/templates/main_app/help_center.html:19
+msgid "How do I add a new book?"
+msgstr "新しい本を追加するにはどうすればよいですか？"
+
+#: main_app/templates/main_app/help_center.html:24
+msgid ""
+"You can add a new book by navigating to the 'Add Book/Review' section and "
+"filling out the book details."
+msgstr "「本の追加/レビュー」セクションに移動し、本の詳細を入力することで新しい本を追加できます。"
+
+#: main_app/templates/main_app/help_center.html:31
+msgid "How can I change my profile picture?"
+msgstr "プロフィール写真を変更するにはどうすればよいですか？"
+
+#: main_app/templates/main_app/help_center.html:36
+msgid ""
+"Currently, profile picture changes are handled in the 'Edit Profile' section "
+"of your settings."
+msgstr "現在、プロフィール写真の変更は、設定の「プロフィールの編集」セクションで処理されます。"
+
+#: main_app/templates/main_app/help_center.html:43
+msgid "What are mutual friends?"
+msgstr "相互フォローの友達とは何ですか？"
+
+#: main_app/templates/main_app/help_center.html:48
+msgid "Mutual friends are users who follow you, and whom you also follow back."
+msgstr "相互フォローの友達とは、あなたをフォローしており、あなたもフォローバックしているユーザーのことです。"
+
+#: main_app/templates/main_app/help_center.html:54
+msgid "Need more help?"
+msgstr "さらにヘルプが必要ですか？"
+
+#: main_app/templates/main_app/help_center.html:55
+msgid ""
+"If you can't find the answer to your question here, please feel free to "
+"contact our support team."
+msgstr "ここで質問の答えが見つからない場合は、お気軽にサポートチームにお問い合わせください。"
+
+#: main_app/templates/main_app/home.html:7
+msgid "Home Page"
+msgstr "ホームページ"
+
+#: main_app/templates/main_app/home.html:33
+msgid "Explore All Books"
+msgstr "すべての本を探索"
+
+#: main_app/templates/main_app/home.html:34
+#: main_app/templates/main_app/home.html:46
+#: main_app/templates/main_app/home.html:117
+msgid "See more"
+msgstr "もっと見る"
+
+#: main_app/templates/main_app/home.html:37
+msgid "Click 'See more' to browse our entire collection."
+msgstr "「もっと見る」をクリックして、すべてのコレクションを閲覧してください。"
+
+#: main_app/templates/main_app/home.html:45
+msgid "Based on your tastes"
+msgstr "あなたの好みに基づく"
+
+#: main_app/templates/main_app/home.html:83
+msgid "No recommended books found based on your tastes."
+msgstr "あなたの好みに基づくおすすめの本は見つかりませんでした。"
+
+#: main_app/templates/main_app/home.html:92
+#: main_app/templates/main_app/home.html:162
+msgid "Previous"
+msgstr "前へ"
+
+#: main_app/templates/main_app/home.html:96
+#: main_app/templates/main_app/home.html:166
+msgid "Next"
+msgstr "次へ"
+
+#: main_app/templates/main_app/home.html:107
+msgid "Discover amazing books!"
+msgstr "素晴らしい本を発見しよう！"
+
+#: main_app/templates/main_app/home.html:108
+msgid ""
+"Login or sign up to get personalized recommendations and track your reading "
+"journey."
+msgstr "ログインまたはサインアップして、パーソナライズされたおすすめを受け取り、読書ジャーニーを追跡しましょう。"
+
+#: main_app/templates/main_app/home.html:109
+#, fuzzy
+#| msgid "Login"
+msgid "Login Now"
+msgstr "今すぐログイン"
+
+#: main_app/templates/main_app/home.html:110
+msgid "Create Account"
+msgstr "アカウントを作成"
+
+#: main_app/templates/main_app/home.html:116
+msgid "Trending"
+msgstr "トレンド"
+
+#: main_app/templates/main_app/home.html:153
+msgid "No trending books found."
+msgstr "トレンドの本は見つかりませんでした。"
+
+#: main_app/templates/main_app/login.html:53
+#, python-format
+msgid "Don't have an account? <a href=\"%(signup_url)s\">Sign Up here</a>."
+msgstr "アカウントをお持ちでないですか？<a href=\"%(signup_url)s\">こちらからサインアップ</a>。"
+
+#: main_app/templates/main_app/manage_blocked_users.html:5
+#: main_app/templates/main_app/manage_blocked_users.html:8
+#: main_app/templates/main_app/settings.html:129
+msgid "Manage Blocked Users"
+msgstr "ブロックしたユーザーを管理"
+
+#: main_app/templates/main_app/manage_blocked_users.html:22
+msgid "Users You Have Blocked"
+msgstr "あなたがブロックしたユーザー"
+
+#: main_app/templates/main_app/manage_blocked_users.html:31
+msgid "Blocked on"
+msgstr "ブロック日時"
+
+#: main_app/templates/main_app/manage_blocked_users.html:35
+#: main_app/templates/main_app/profile.html:61
+msgid "Unblock"
+msgstr "ブロック解除"
+
+#: main_app/templates/main_app/manage_blocked_users.html:41
+msgid "You haven't blocked any users yet."
+msgstr "まだ誰もブロックしていません。"
+
+#: main_app/templates/main_app/my_list.html:14
+msgid "Wants to Read"
+msgstr "読みたい本"
+
+#: main_app/templates/main_app/my_list.html:44
+msgid "Added on"
+msgstr "追加日"
+
+#: main_app/templates/main_app/my_list.html:48
+msgid "Mark as Read"
+msgstr "読了としてマーク"
+
+#: main_app/templates/main_app/my_list.html:52
+msgid ""
+"Are you sure you want to remove this book from your \\\\'Wants to Read\\\\' "
+"list?"
+msgstr "この本を「読みたい本」リストから削除してもよろしいですか？"
+
+#: main_app/templates/main_app/my_list.html:53
+msgid "Remove"
+msgstr "削除"
+
+#: main_app/templates/main_app/my_list.html:63
+msgid "Your 'Wants to Read' list is empty."
+msgstr "あなたの「読みたい本」リストは空です。"
+
+#: main_app/templates/main_app/my_list.html:64
+msgid "Start adding books to your list!"
+msgstr "リストに本を追加しましょう！"
+
+#: main_app/templates/main_app/my_list.html:65
+msgid "Add a Book"
+msgstr "本を追加"
+
+#: main_app/templates/main_app/my_list.html:117
+msgid "You haven't reviewed any books yet."
+msgstr "まだレビューした本はありません。"
+
+#: main_app/templates/main_app/my_list.html:118
+msgid "Mark books as read and add your thoughts!"
+msgstr "読んだ本をマークして感想を追加しましょう！"
+
+#: main_app/templates/main_app/my_list.html:119
+msgid "Add a Review"
+msgstr "レビューを追加"
+
+#: main_app/templates/main_app/notifications.html:5
+#: main_app/templates/main_app/notifications.html:8
+msgid "Notifications"
+msgstr "通知"
+
+#: main_app/templates/main_app/notifications.html:26
+msgid "Mark All as Read"
+msgstr "すべて既読にする"
+
+#: main_app/templates/main_app/notifications.html:41
+msgid "New"
+msgstr "新着"
+
+#: main_app/templates/main_app/notifications.html:47
+msgid "You have no new notifications."
+msgstr "新しい通知はありません。"
+
+#: main_app/templates/main_app/profile.html:29
+msgid "Member since"
+msgstr "メンバー登録日"
+
+#: main_app/templates/main_app/profile.html:31
+msgid "Public Profile"
+msgstr "公開プロフィール"
+
+#: main_app/templates/main_app/profile.html:33
+msgid "Private Profile"
+msgstr "非公開プロフィール"
+
+#: main_app/templates/main_app/profile.html:42
+msgid "Follow"
+msgstr "フォロー"
+
+#: main_app/templates/main_app/profile.html:53
+msgid "Are you sure you want to block this user? This will also unfollow them."
+msgstr "このユーザーをブロックしてもよろしいですか？ブロックするとフォローも解除されます。"
+
+#: main_app/templates/main_app/profile.html:54
+msgid "Block"
+msgstr "ブロック"
+
+#: main_app/templates/main_app/profile.html:77
+msgid "No description provided yet."
+msgstr "まだ説明がありません。"
+
+#: main_app/templates/main_app/profile.html:82
+msgid "Recent Reviews"
+msgstr "最近のレビュー"
+
+#: main_app/templates/main_app/profile.html:125
+#: main_app/templates/main_app/reviews.html:72
+msgid "This user has not reviewed any books yet."
+msgstr "このユーザーはまだ本をレビューしていません。"
+
+#: main_app/templates/main_app/reviews.html:6
+#: main_app/templates/main_app/reviews.html:13
+msgid "Reviews by"
+msgstr "のレビュー"
+
+#: main_app/templates/main_app/reviews.html:6
+#: main_app/templates/main_app/reviews.html:15
+msgid "Reviews"
+msgstr "レビュー"
+
+#: main_app/templates/main_app/reviews.html:11
+msgid "Popular Reviews (Last 7 Days)"
+msgstr "人気のレビュー (過去7日間)"
+
+#: main_app/templates/main_app/reviews.html:71
+msgid "No popular reviews found yet."
+msgstr "人気のレビューはまだ見つかりませんでした。"
+
+#: main_app/templates/main_app/reviews.html:73
+msgid "No reviews found."
+msgstr "レビューが見つかりませんでした。"
+
+#: main_app/templates/main_app/search_results.html:6
+msgid "Search Results"
+msgstr "検索結果"
+
+#: main_app/templates/main_app/search_results.html:9
+msgid "Search Results for"
+msgstr "の検索結果"
+
+#: main_app/templates/main_app/search_results.html:12
+msgid "Books"
+msgstr "本"
+
+#: main_app/templates/main_app/search_results.html:36
+msgid "No books found matching your search."
+msgstr "検索に一致する本は見つかりませんでした。"
+
+#: main_app/templates/main_app/search_results.html:42
+msgid "Users"
+msgstr "ユーザー"
+
+#: main_app/templates/main_app/search_results.html:65
+msgid "No results found for your search query."
+msgstr "検索クエリに一致する結果は見つかりませんでした。"
+
+#: main_app/templates/main_app/settings.html:28
+msgid "Account Information"
+msgstr "アカウント情報"
+
+#: main_app/templates/main_app/settings.html:29
+msgid "Manage your account details."
+msgstr "アカウントの詳細を管理します。"
+
+#: main_app/templates/main_app/settings.html:33
+msgid "Profile Customization"
+msgstr "プロフィールのカスタマイズ"
+
+#: main_app/templates/main_app/settings.html:34
+msgid "Update your profile picture, display name, and bio."
+msgstr "プロフィール写真、表示名、自己紹介を更新します。"
+
+#: main_app/templates/main_app/settings.html:44
+msgid "Change Username"
+msgstr "ユーザー名を変更"
+
+#: main_app/templates/main_app/settings.html:45
+msgid "Your current username is"
+msgstr "現在のユーザー名は"
+
+#: main_app/templates/main_app/settings.html:51
+msgid "New Username"
+msgstr "新しいユーザー名"
+
+#: main_app/templates/main_app/settings.html:57
+msgid "Update Username"
+msgstr "ユーザー名を更新"
+
+#: main_app/templates/main_app/settings.html:65
+#: main_app/templates/main_app/settings.html:95
+msgid "Change Password"
+msgstr "パスワードを変更"
+
+#: main_app/templates/main_app/settings.html:66
+msgid "Update your account password."
+msgstr "アカウントのパスワードを更新します。"
+
+#: main_app/templates/main_app/settings.html:72
+msgid "Current Password"
+msgstr "現在のパスワード"
+
+#: main_app/templates/main_app/settings.html:79
+msgid "New Password"
+msgstr "新しいパスワード"
+
+#: main_app/templates/main_app/settings.html:86
+msgid "Confirm New Password"
+msgstr "新しいパスワードを確認"
+
+#: main_app/templates/main_app/settings.html:102
+msgid "Privacy Settings"
+msgstr "プライバシー設定"
+
+#: main_app/templates/main_app/settings.html:106
+msgid "Profile Visibility"
+msgstr "プロフィールの公開設定"
+
+#: main_app/templates/main_app/settings.html:107
+msgid "Control who can see your profile and activity."
+msgstr "プロフィールやアクティビティを見ることができる人を管理します。"
+
+#: main_app/templates/main_app/settings.html:115
+msgid "Your profile is Public"
+msgstr "あなたのプロフィールは公開です"
+
+#: main_app/templates/main_app/settings.html:115
+msgid "Your profile is Private"
+msgstr "あなたのプロフィールは非公開です"
+
+#: main_app/templates/main_app/settings.html:118
+msgid "Save Privacy"
+msgstr "プライバシーを保存"
+
+#: main_app/templates/main_app/settings.html:126
+msgid "Blocked Users"
+msgstr "ブロックしたユーザー"
+
+#: main_app/templates/main_app/settings.html:127
+msgid "Manage users you have blocked from interacting with you."
+msgstr "あなたとやり取りできないようにブロックしたユーザーを管理します。"
+
+#: main_app/templates/main_app/settings.html:136
+msgid "Notification Preferences"
+msgstr "通知設定"
+
+#: main_app/templates/main_app/settings.html:137
+msgid "Choose which notifications you receive."
+msgstr "受け取る通知を選択してください。"
+
+#: main_app/templates/main_app/settings.html:145
+msgid "New followers"
+msgstr "新しいフォロワー"
+
+#: main_app/templates/main_app/settings.html:151
+msgid "Likes on your reviews"
+msgstr "あなたのレビューへの「いいね」"
+
+#: main_app/templates/main_app/settings.html:157
+msgid "Friend activity (new books, reviews)"
+msgstr "友達のアクティビティ (新しい本、レビュー)"
+
+#: main_app/templates/main_app/settings.html:160
+msgid "Save Notifications"
+msgstr "通知を保存"
+
+#: main_app/templates/main_app/settings.html:166
+msgid "General Preferences"
+msgstr "一般設定"
+
+#: main_app/templates/main_app/settings.html:170
+#, fuzzy
+#| msgid "Language"
+msgid "Display Language"
+msgstr "表示言語"
+
+#: main_app/templates/main_app/settings.html:184
 msgid "Go"
 msgstr "移動"
 
-#: main_app/templates/main_app/login.html:40
-#, python-format
-msgid "Don't have an account? <a href=\"%(signup_url)s\">Sign Up here</a>."
-msgstr ""
-"アカウントをお持ちでないですか？<a href=\"%(signup_url)s\">こちらからサイン"
-"アップ</a>。"
+#: main_app/templates/main_app/settings.html:192
+msgid "Time Zone"
+msgstr "タイムゾーン"
 
-#: main_app/templates/main_app/signup.html:39
+#: main_app/templates/main_app/settings.html:193
+msgid "Set your local time zone for accurate timestamps."
+msgstr "正確なタイムスタンプのために、あなたのローカルタイムゾーンを設定します。"
+
+#: main_app/templates/main_app/settings.html:199
+msgid "Select Time Zone"
+msgstr "タイムゾーンを選択"
+
+#: main_app/templates/main_app/settings.html:205
+msgid "Save Time Zone"
+msgstr "タイムゾーンを保存"
+
+#: main_app/templates/main_app/settings.html:233
+msgid "Information & Support"
+msgstr "情報とサポート"
+
+#: main_app/templates/main_app/settings.html:237
+msgid "About"
+msgstr "について"
+
+#: main_app/templates/main_app/settings.html:238
+msgid "BadReads is a book tracking and social reading application."
+msgstr "BadReadsは、本の追跡とソーシャルな読書アプリケーションです。"
+
+#: main_app/templates/main_app/settings.html:239
+msgid "Version"
+msgstr "バージョン"
+
+#: main_app/templates/main_app/settings.html:240
+msgid "Developed by"
+msgstr "開発者"
+
+#: main_app/templates/main_app/settings.html:247
+msgid "Help & Support"
+msgstr "ヘルプとサポート"
+
+#: main_app/templates/main_app/settings.html:248
+msgid "Need assistance? Visit our help center or contact support."
+msgstr "サポートが必要ですか？ヘルプセンターにアクセスするか、サポートにお問い合わせください。"
+
+#: main_app/templates/main_app/settings.html:256
+msgid "Danger Zone"
+msgstr "危険ゾーン"
+
+#: main_app/templates/main_app/settings.html:258
+msgid "Delete Account"
+msgstr "アカウントを削除"
+
+#: main_app/templates/main_app/settings.html:259
+msgid ""
+"Permanently delete your account and all associated data. This action cannot "
+"be undone."
+msgstr "あなたのアカウントと関連するすべてのデータを完全に削除します。この操作は元に戻せません。"
+
+#: main_app/templates/main_app/settings.html:262
+msgid "Delete My Account"
+msgstr "私のアカウントを削除"
+
+#: main_app/templates/main_app/settings.html:272
+msgid "Confirm Account Deletion"
+msgstr "アカウント削除の確認"
+
+#: main_app/templates/main_app/settings.html:276
+msgid ""
+"Are you absolutely sure you want to delete your account? All your data will "
+"be permanently removed."
+msgstr "本当にアカウントを削除してもよろしいですか？すべてのデータは完全に削除されます。"
+
+#: main_app/templates/main_app/settings.html:277
+msgid "This action cannot be undone."
+msgstr "この操作は元に戻せません。"
+
+#: main_app/templates/main_app/settings.html:283
+msgid "Yes, Delete My Account"
+msgstr "はい、アカウントを削除します"
+
+#: main_app/templates/main_app/signup.html:53
 #, python-format
 msgid "Already have an account? <a href=\"%(login_url)s\">Log In here</a>."
-msgstr ""
-"すでにアカウントをお持ちですか？<a href=\"%(login_url)s\">こちらからログイン"
-"</a>。"
+msgstr "すでにアカウントをお持ちですか？<a href=\"%(login_url)s\">こちらからログイン</a>。"
 
-#: main_app/views.py:18
+#: main_app/views.py:70
 msgid "Account created successfully! Please log in."
 msgstr "アカウントが正常に作成されました！ログインしてください。"
 
-#: main_app/views.py:21
+#: main_app/views.py:73 main_app/views.py:221 main_app/views.py:1607
 msgid "Please correct the errors below."
 msgstr "以下のエラーを修正してください。"
 
-#: main_app/views.py:39 main_app/views.py:41
+#: main_app/views.py:93 main_app/views.py:95
 msgid "Invalid username or password."
 msgstr "ユーザー名またはパスワードが無効です。"
 
-#: main_app/views.py:49
+#: main_app/views.py:103
 msgid "You have been logged out successfully."
 msgstr "正常にログアウトされました。"
 
-#: main_app/views.py:57
-msgid "Welcome to the site. Please log in or sign up."
-msgstr "サイトへようこそ。ログインまたはサインアップしてください。"
+#: main_app/views.py:162
+msgid "Welcome to BadReads"
+msgstr "BadReadsへようこそ"
+
+#: main_app/views.py:205
+msgid "You are not authorized to edit this profile."
+msgstr "あなたはこのプロフィールを編集する権限がありません。"
+
+#: main_app/views.py:218
+#, fuzzy
+#| msgid "You have been logged out successfully."
+msgid "Your profile has been updated successfully!"
+msgstr "あなたのプロフィールは正常に更新されました！"
+
+#: main_app/views.py:267
+msgid "You unliked this review."
+msgstr "このレビューへの「いいね」を取り消しました。"
+
+#: main_app/views.py:270
+msgid "You liked this review!"
+msgstr "このレビューに「いいね」しました！"
+
+#: main_app/views.py:288
+msgid "You are not authorized to view this list."
+msgstr "あなたはこのリストを閲覧する権限がありません。"
+
+#: main_app/views.py:323 main_app/views.py:979 main_app/views.py:1746
+msgid "Invalid request method."
+msgstr "無効なリクエストメソッドです。"
+
+#: main_app/views.py:427
+msgid "You cannot follow yourself."
+msgstr "自分自身をフォローすることはできません。"
+
+#: main_app/views.py:511
+msgid "You cannot chat with yourself."
+msgstr "自分自身とチャットすることはできません。"
+
+#: main_app/views.py:551
+msgid "Your message could not be sent. Please try again."
+msgstr "メッセージを送信できませんでした。もう一度お試しください。"
+
+#: main_app/views.py:623 main_app/views.py:824
+msgid "no_isbn"
+msgstr "ISBNなし"
+
+#: main_app/views.py:627
+msgid "Could not download book cover from Open Library."
+msgstr "Open Libraryから本の表紙をダウンロードできませんでした。"
+
+#: main_app/views.py:644
+#, python-brace-format
+msgid "Book added by {user}"
+msgstr "{user} によって追加された本"
+
+#: main_app/views.py:663 main_app/views.py:867
+#, fuzzy
+#| msgid "Please correct the errors below."
+msgid "Please correct the errors in the form."
+msgstr "フォームのエラーを修正してください。"
+
+#: main_app/views.py:744
+#, python-brace-format
+msgid "{field_name_display}: '{old_value_display}' -> '{new_value_display}'"
+msgstr "{field_name_display}: '{old_value_display}' -> '{new_value_display}'"
+
+#: main_app/views.py:753
+#, python-brace-format
+msgid "Release Date: '{old_date_display}' -> '{new_date_display}'"
+msgstr "発売日: '{old_date_display}' -> '{new_date_display}'"
+
+#: main_app/views.py:769
+#, python-brace-format
+msgid "{display_name}: '{old_value_display}' -> '{new_value_display}'"
+msgstr "{display_name}: '{old_value_display}' -> '{new_value_display}'"
+
+#: main_app/views.py:780
+msgid "Cover: new file uploaded"
+msgstr "表紙: 新しいファイルがアップロードされました"
+
+#: main_app/views.py:782
+#, python-brace-format
+msgid "Cover: changed to URL '{new_url}'"
+msgstr "表紙: URL '{new_url}' に変更されました"
+
+#: main_app/views.py:785
+msgid "Cover: removed"
+msgstr "表紙: 削除されました"
+
+#: main_app/views.py:831
+msgid ""
+"Could not download book cover from Open Library during edit. Keeping "
+"existing cover if any."
+msgstr "編集中にOpen Libraryから本の表紙をダウンロードできませんでした。既存の表紙がある場合はそれを保持します。"
+
+#: main_app/views.py:844
+msgid "Edited: "
+msgstr "編集済み："
+
+#: main_app/views.py:849
+msgid "No changes were made to the book."
+msgstr "本に何の変更もありませんでした。"
+
+#: main_app/views.py:916
+msgid "Invalid request to delete the book."
+msgstr "本を削除するための無効なリクエストです。"
+
+#: main_app/views.py:935
+msgid "Review and rating are required."
+msgstr "レビューと評価は必須です。"
+
+#: main_app/views.py:960
+msgid "Rating must be a number between 0 and 5."
+msgstr "評価は0から5の間の数値である必要があります。"
+
+#: main_app/views.py:1004
+#, fuzzy
+#| msgid "You have been logged out successfully."
+msgid "Your username has been updated successfully!"
+msgstr "あなたのユーザー名は正常に更新されました！"
+
+#: main_app/views.py:1009
+msgid "Error updating username. Please check the form."
+msgstr "ユーザー名の更新中にエラーが発生しました。フォームを確認してください。"
+
+#: main_app/views.py:1016
+msgid "Your password was successfully updated!"
+msgstr "パスワードが正常に更新されました！"
+
+#: main_app/views.py:1021
+msgid "Error updating password. Please check the form."
+msgstr "パスワードの更新中にエラーが発生しました。フォームを確認してください。"
+
+#: main_app/views.py:1028
+msgid "Your profile is now public."
+msgstr "あなたのプロフィールは現在公開されています。"
+
+#: main_app/views.py:1030
+msgid "Your profile is now private."
+msgstr "あなたのプロフィールは現在非公開です。"
+
+#: main_app/views.py:1032
+msgid "Error updating profile visibility."
+msgstr "プロフィールの公開設定の更新中にエラーが発生しました。"
+
+#: main_app/views.py:1038
+msgid "Notification settings updated successfully!"
+msgstr "通知設定が正常に更新されました！"
+
+#: main_app/views.py:1040
+msgid "Error updating notification settings. Please check the form."
+msgstr "通知設定の更新中にエラーが発生しました。フォームを確認してください。"
+
+#: main_app/views.py:1046
+msgid "Time zone updated successfully!"
+msgstr "タイムゾーンが正常に更新されました！"
+
+#: main_app/views.py:1048
+msgid "Error updating time zone. Please check the form."
+msgstr "タイムゾーンの更新中にエラーが発生しました。フォームを確認してください。"
+
+#: main_app/views.py:1055
+msgid "Dark theme activated."
+msgstr "ダークテーマが有効になりました。"
+
+#: main_app/views.py:1057
+msgid "Light theme activated."
+msgstr "ライトテーマが有効になりました。"
+
+#: main_app/views.py:1059
+msgid "Error updating theme."
+msgstr "テーマの更新中にエラーが発生しました。"
+
+#: main_app/views.py:1089
+#, fuzzy
+#| msgid "You have been logged out successfully."
+msgid "Your account has been deleted successfully."
+msgstr "アカウントは正常に削除されました。"
+
+#: main_app/views.py:1091
+msgid "Invalid request for account deletion."
+msgstr "アカウント削除のための無効なリクエストです。"
+
+#: main_app/views.py:1116
+msgid "You cannot block yourself."
+msgstr "自分自身をブロックすることはできません。"
+
+#: main_app/views.py:1137
+msgid "You cannot unblock yourself."
+msgstr "自分自身をブロック解除することはできません。"
+
+#: main_app/views.py:1178
+msgid "All notifications marked as read."
+msgstr "すべての通知が既読になりました。"
+
+#: main_app/views.py:1213
+msgid "All Recommended Books"
+msgstr "すべてのおすすめ本"
+
+#: main_app/views.py:1221
+msgid "All Trending Books"
+msgstr "すべてのトレンド本"
+
+#: main_app/views.py:1362
+msgid "Book not found for this ISBN."
+msgstr "このISBNの本は見つかりませんでした。"
+
+#: main_app/views.py:1368
+msgid "Book data not found for this ISBN key."
+msgstr "このISBNキーの書籍データは見つかりませんでした。"
+
+#: main_app/views.py:1508
+msgid "A book with this ISBN already exists."
+msgstr "このISBNの本はすでに存在します。"
+
+#: main_app/views.py:1585
+msgid "Book added successfully!"
+msgstr "本が正常に追加されました！"
+
+#: main_app/views.py:1592
+msgid "Book saved and previewed!"
+msgstr "本が保存され、プレビューされました！"
+
+#: main_app/views.py:1685
+msgid "No image data provided."
+msgstr "画像データが提供されていません。"
+
+#: main_app/views.py:1694
+msgid "Invalid image data format. Expected base64 string."
+msgstr "無効な画像データ形式です。base64文字列が必要です。"
+
+#: main_app/views.py:1735
+msgid "No valid ISBN found in the scanned image. Please try again."
+msgstr "スキャンした画像に有効なISBNが見つかりませんでした。もう一度お試しください。"
+
+#: main_app/views.py:1738
+msgid "Invalid JSON."
+msgstr "無効なJSONです。"
+
+#: main_app/views.py:1742
+msgid "Tesseract OCR engine not found. Please install it or check its path."
+msgstr "Tesseract OCRエンジンが見つかりません。インストールするか、パスを確認してください。"
+
+#~ msgid "Welcome to the site. Please log in or sign up."
+#~ msgstr "サイトへようこそ。ログインまたはサインアップしてください。"

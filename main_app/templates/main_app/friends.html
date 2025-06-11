@@ -1,0 +1,152 @@
+{% extends 'main_app/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Friends" %}: {{ profile_user.display_name }}{% endblock %}
+
+{% block content %}
+    <h2 class="section-title mb-4">{% trans "Friends & Following" %}: {{ profile_user.display_name }}</h2>
+
+    {% if messages %}
+        <div class="mb-4">
+        {% for message in messages %}
+             {% if 'error' in message.tags %}<div class="alert alert-danger" role="alert">
+             {% else %}<div class="alert alert-{{ message.tags }}" role="alert">{% endif %}
+                {{ message }}
+             </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="mb-4">
+        {% if is_my_profile %}
+            <a href="{% url 'friends_search' %}" class="btn btn-primary rounded-pill mb-3">{% trans "Find More People" %}</a>
+        {% endif %}
+    </div>
+
+    <ul class="nav nav-tabs nav-justified mb-4" id="friendsTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active rounded-material" id="mutual-friends-tab" data-bs-toggle="tab" data-bs-target="#mutual-friends" type="button" role="tab" aria-controls="mutual-friends" aria-selected="true">
+                {% trans "Mutual Friends" %} ({{ mutual_friends|length }})
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link rounded-material" id="following-tab" data-bs-toggle="tab" data-bs-target="#following" type="button" role="tab" aria-controls="following" aria-selected="false">
+                {% trans "Following" %} ({{ following|length }})
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link rounded-material" id="followers-tab" data-bs-toggle="tab" data-bs-target="#followers" type="button" role="tab" aria-controls="followers" aria-selected="false">
+                {% trans "Followers" %} ({{ followers|length }})
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="friendsTabContent">
+        {# Pestaña: Amigos Mutuos #}
+        <div class="tab-pane fade show active" id="mutual-friends" role="tabpanel" aria-labelledby="mutual-friends-tab">
+            <div class="row">
+                {% if mutual_friends %}
+                    {% for user_obj in mutual_friends %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card p-3 rounded-material elevation-1 d-flex flex-row align-items-center">
+                                <img src="{% if user_obj.profile_picture %}{{ user_obj.profile_picture.url }}{% else %}{% static 'images/default_profile.png' %}{% endif %}" alt="Profile Image" class="profile-img me-3">
+                                <div>
+                                    <h5 class="mb-0">
+                                        <a href="{% url 'user_profile' user_obj.pk %}" class="text-decoration-none text-body">{{ user_obj.display_name }}</a>
+                                    </h5>
+                                    <p class="text-muted mb-0">@{{ user_obj.username }}</p>
+                                </div>
+                                <div class="ms-auto">
+                                    {% if user.is_authenticated and user != user_obj %}
+                                        <a href="{% url 'chat_room' user_obj.pk %}" class="btn btn-secondary rounded-pill me-2">{% trans "Chat" %}</a>
+                                        <form action="{% url 'follow_user' user_obj.pk %}" method="post" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-primary rounded-pill">{% trans "Unfollow" %}</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12 text-center">
+                        <p class="lead">{% trans "You don't have any mutual friends yet." %}</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {# Pestaña: Siguiendo (Following) #}
+        <div class="tab-pane fade" id="following" role="tabpanel" aria-labelledby="following-tab">
+            <div class="row">
+                {% if following %}
+                    {% for follow_entry in following %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card p-3 rounded-material elevation-1 d-flex flex-row align-items-center">
+                                <img src="{% if follow_entry.followed.profile_picture %}{{ follow_entry.followed.profile_picture.url }}{% else %}{% static 'images/default_profile.png' %}{% endif %}" alt="Profile Image" class="profile-img me-3">
+                                <div>
+                                    <h5 class="mb-0">
+                                        <a href="{% url 'user_profile' follow_entry.followed.pk %}" class="text-decoration-none text-body">{{ follow_entry.followed.display_name }}</a>
+                                    </h5>
+                                    <p class="text-muted mb-0">@{{ follow_entry.followed.username }}</p>
+                                </div>
+                                <div class="ms-auto">
+                                    {% if user.is_authenticated and user != follow_entry.followed %}
+                                        <form action="{% url 'follow_user' follow_entry.followed.pk %}" method="post" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-primary rounded-pill">{% trans "Unfollow" %}</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12 text-center">
+                        <p class="lead">{% trans "You are not following anyone yet." %}</p>
+                        {% if is_my_profile %}
+                            <a href="{% url 'friends_search' %}" class="btn btn-primary rounded-pill">{% trans "Find People to Follow" %}</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {# Pestaña: Seguidores (Followers) #}
+        <div class="tab-pane fade" id="followers" role="tabpanel" aria-labelledby="followers-tab">
+            <div class="row">
+                {% if followers %}
+                    {% for follower_data in followers %} 
+                        <div class="col-md-6 mb-4">
+                            <div class="card p-3 rounded-material elevation-1 d-flex flex-row align-items-center">
+                                <img src="{% if follower_data.follower.profile_picture %}{{ follower_data.follower.profile_picture.url }}{% else %}{% static 'images/profile_placeholder.png' %}{% endif %}" alt="Profile Image" class="profile-img me-3">
+                                <div>
+                                    <h5 class="mb-0">
+                                        <a href="{% url 'user_profile' follower_data.follower.pk %}" class="text-decoration-none text-body">{{ follower_data.follower.display_name }}</a>
+                                    </h5>
+                                    <p class="text-muted mb-0">@{{ follower_data.follower.username }}</p>
+                                </div>
+                                <div class="ms-auto">
+                                    {# Opción de seguir de vuelta (Follow Back) si no se sigue ya #}
+                                    {% if user.is_authenticated and user != follower_data.follower %}
+                                        <form action="{% url 'follow_user' follower_data.follower.pk %}" method="post" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn {% if follower_data.is_currently_following %}btn-outline-primary{% else %}btn-primary{% endif %} rounded-pill">
+                                                {% if follower_data.is_currently_following %}{% trans "Following" %}{% else %}{% trans "Follow Back" %}{% endif %}
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12 text-center">
+                        <p class="lead">{% trans "No one is following you yet." %}</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}
